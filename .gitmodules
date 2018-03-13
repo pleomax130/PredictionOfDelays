@@ -1,0 +1,3 @@
+[submodule "vendor/plugingit"]
+	path = vendor/plugingit
+	url = git://github.com/korin/open_flash_chart_2_plugin.git
