@@ -14,7 +14,6 @@ namespace PredictionOfDelays.Infrastructure.Repositories
     {
         private readonly ApplicationDbContext _context = new ApplicationDbContext();
 
-
         public IQueryable<Event> GetAllAsync()
             => _context.Events.AsQueryable();
 
