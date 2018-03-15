@@ -52,10 +52,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\PredictionOfDelays.Api\PredictionOfDelays.Api.csproj">
-      <Project>{74AA0554-793F-47B7-A1D2-802F2AF52FBB}</Project>
-      <Name>PredictionOfDelays.Api</Name>
-    </ProjectReference>
     <ProjectReference Include="..\PredictionOfDelays.Core\PredictionOfDelays.Core.csproj">
       <Project>{9db96803-fac0-4c8f-9f78-24e447bc9ee2}</Project>
       <Name>PredictionOfDelays.Core</Name>
@@ -64,6 +60,9 @@
       <Project>{61db739c-54ea-42fa-8f31-0450ada01321}</Project>
       <Name>PredictionOfDelays.Infrastructure</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
