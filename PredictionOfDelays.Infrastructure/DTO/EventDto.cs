@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace PredictionOfDelays.Infrastructure.DTO
 {
@@ -8,5 +9,6 @@ namespace PredictionOfDelays.Infrastructure.DTO
         public string Name { get; set; }
         public DateTime EventDate { get; set; }
         public string Description { get; set; }
+        public List<ApplicationUserDto> Users { get; set; }
     }
 }
