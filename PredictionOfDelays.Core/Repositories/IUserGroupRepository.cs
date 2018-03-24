@@ -6,8 +6,8 @@ namespace PredictionOfDelays.Core.Repositories
 {
     public interface IUserGroupRepository : IRepository
     {
-        Task AddAsync(UserGroup userGroup);
-        Task RemoveAsync(UserGroup userGroup);
-        Task<ICollection<ApplicationUser>> GetMembersAsync(int groupId);
+        RepositoryActionResult<Task> AddAsync(UserGroup userGroup);
+        RepositoryActionResult<Task> RemoveAsync(UserGroup userGroup);
+        RepositoryActionResult<Task<ICollection<ApplicationUser>>> GetMembersAsync(int groupId);
     }
 }

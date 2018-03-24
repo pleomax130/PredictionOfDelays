@@ -6,8 +6,8 @@ namespace PredictionOfDelays.Core.Repositories
 {
     public interface IUserEventRepository : IRepository
     {
-        Task AddAsync(UserEvent userEvent);
-        Task RemoveAsync(UserEvent userEvent);
-        Task<ICollection<ApplicationUser>> GetAttendeesAsync(int eventId);
+        RepositoryActionResult<Task> AddAsync(UserEvent userEvent);
+        RepositoryActionResult<Task> RemoveAsync(UserEvent userEvent);
+        RepositoryActionResult<Task<ICollection<ApplicationUser>>> GetAttendeesAsync(int eventId);
     }
 }

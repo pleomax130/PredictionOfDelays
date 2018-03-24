@@ -6,6 +6,7 @@
         Created,
         Updated,
         Deleted,
-        Error
+        Error,
+        Ok
     }
 }
