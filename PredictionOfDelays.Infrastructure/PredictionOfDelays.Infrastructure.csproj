@@ -120,6 +120,7 @@
     <Compile Include="DTO\ApplicationUserDto.cs" />
     <Compile Include="DTO\EventDto.cs" />
     <Compile Include="DTO\GroupDto.cs" />
+    <Compile Include="ErrorCodes.cs" />
     <Compile Include="IoC\Modules\RepositoryModule.cs" />
     <Compile Include="IoC\Modules\ServiceModule.cs" />
     <Compile Include="Mappers\AutoMapperConfig.cs" />
@@ -128,6 +129,7 @@
     <Compile Include="Repositories\GroupRepository.cs" />
     <Compile Include="Repositories\UserEventRepository.cs" />
     <Compile Include="Repositories\UserGroupRepository.cs" />
+    <Compile Include="ServiceException.cs" />
     <Compile Include="Services\EventService.cs" />
     <Compile Include="Services\GroupService.cs" />
     <Compile Include="Services\IEventService.cs" />
