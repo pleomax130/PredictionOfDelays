@@ -17,18 +17,6 @@ namespace PredictionOfDelays.Infrastructure.IoC.Modules
                 .Where(x => x.IsAssignableTo<IRepository>())
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
-            builder.RegisterType<EventRepository>()
-                .As<IEventRepository>()
-                .SingleInstance();
-            builder.RegisterType<GroupRepository>()
-                .As<IGroupRepository>()
-                .SingleInstance();
-            builder.RegisterType<UserEventRepository>()
-                .As<IUserEventRepository>()
-                .SingleInstance();
-            builder.RegisterType<UserGroupRepository>()
-                .As<IUserGroupRepository>()
-                .SingleInstance();
         }
     }
 }
