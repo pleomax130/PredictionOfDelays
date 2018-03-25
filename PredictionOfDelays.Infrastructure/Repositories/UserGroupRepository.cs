@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,22 +12,63 @@ namespace PredictionOfDelays.Infrastructure.Repositories
     {
         private readonly ApplicationDbContext _context = new ApplicationDbContext();
 
-        public async Task AddAsync(UserGroup userGroup)
+        public async Task<RepositoryActionResult<UserGroup>> AddAsync(UserGroup userGroup)
         {
-            _context.UserGroups.Add(userGroup);
-            await _context.SaveChangesAsync();
+            var group = await _context.Groups.FirstOrDefaultAsync(g => g.GroupId == userGroup.GroupId);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userGroup.ApplicationUserId);
+
+            if (group == null || user == null)
+            {
+                return new RepositoryActionResult<UserGroup>(userGroup, RepositoryStatus.NotFound);
+            }
+
+            try
+            {
+                _context.UserGroups.Add(userGroup);
+                await _context.SaveChangesAsync();
+                return new RepositoryActionResult<UserGroup>(userGroup, RepositoryStatus.Created);
+            }
+            catch (Exception exception)
+            {
+                return new RepositoryActionResult<UserGroup>(userGroup, RepositoryStatus.Error);
+            }
         }
 
-        public async Task RemoveAsync(UserGroup userGroup)
+        public async Task<RepositoryActionResult<UserGroup>> RemoveAsync(UserGroup userGroup)
         {
-            _context.UserGroups.Remove(userGroup);
-            await _context.SaveChangesAsync();
+            var ug = await _context.UserGroups.FirstOrDefaultAsync(usGr =>
+                usGr.GroupId == userGroup.GroupId && usGr.ApplicationUserId == userGroup.ApplicationUserId);
+
+            if (ug == null)
+            {
+                return new RepositoryActionResult<UserGroup>(null, RepositoryStatus.NotFound);
+            }
+
+            try
+            {
+                _context.UserGroups.Remove(userGroup);
+                await _context.SaveChangesAsync();
+                return new RepositoryActionResult<UserGroup>(userGroup, RepositoryStatus.Deleted);
+            }
+            catch (Exception exception)
+            {
+                return new RepositoryActionResult<UserGroup>(userGroup, RepositoryStatus.Error);
+            }
         }
 
-        public async Task<ICollection<ApplicationUser>> GetMembersAsync(int groupId)
+        public async Task<RepositoryActionResult<ICollection<ApplicationUser>>> GetMembersAsync(int groupId)
         {
-            var users = await _context.UserGroups.Where(g => g.GroupId == groupId).Select(u=>u.ApplicationUser).ToListAsync();
-            return users;
+            var group = await _context.Groups.FirstOrDefaultAsync(g => g.GroupId == groupId);
+
+            if (group == null)
+            {
+                return new RepositoryActionResult<ICollection<ApplicationUser>>(null, RepositoryStatus.NotFound);
+            }
+
+            var attendees = await _context.UserGroups.Include("AspNetUsers").Where(ug => ug.GroupId == groupId)
+                .Select(ue => ue.ApplicationUser).ToListAsync();
+
+            return new RepositoryActionResult<ICollection<ApplicationUser>>(attendees, RepositoryStatus.Ok);
         }
     }
 }
