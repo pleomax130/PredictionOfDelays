@@ -18,6 +18,7 @@ namespace PredictionOfDelays.Api
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+            AutofacConfig.Initialize(GlobalConfiguration.Configuration);
         }
     }
 }

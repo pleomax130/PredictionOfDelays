@@ -18,9 +18,9 @@ namespace PredictionOfDelays.Api.Controllers
         private readonly IEventService _eventService;
         private readonly IUserEventService _userEventService;
 
-        public EventsController()
+        public EventsController(IEventService eventService)
         {
-            _eventService = new EventService(new EventRepository(), AutoMapperConfig.Initialize());
+            _eventService = eventService;
         }
 
         public async Task<IHttpActionResult> Get()

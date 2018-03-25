@@ -19,9 +19,9 @@ namespace PredictionOfDelays.Api.Controllers
         private readonly IGroupService _groupService;
         private readonly IUserGroupService _userGroupService;
 
-        public GroupsController()
+        public GroupsController(IGroupService groupService)
         {
-            _groupService = new GroupService(new GroupRepository(), AutoMapperConfig.Initialize());
+            _groupService = groupService;
         }
         public async Task<IHttpActionResult> Get()
         {
