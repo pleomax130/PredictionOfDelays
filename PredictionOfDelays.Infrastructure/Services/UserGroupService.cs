@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using PredictionOfDelays.Core.Models;
@@ -21,31 +22,21 @@ namespace PredictionOfDelays.Infrastructure.Services
 
         public async Task AddAsync(string userId, int groupId)
         {
-            try
-            {
-                await _userGroupRepository.AddAsync(new UserGroup {ApplicationUserId = userId, GroupId = groupId});
-            }
-            catch (Exception e)
-            {
-                throw;
-            }
+            var result = await _userGroupRepository.AddAsync(new UserGroup {ApplicationUserId = userId, GroupId = groupId});
+            if (result.Status != RepositoryStatus.Created) throw new Exception();
         }
 
         public async Task RemoveAsync(string userId, int groupId)
         {
-            try
-            {
-                await _userGroupRepository.RemoveAsync(new UserGroup {ApplicationUserId = userId, GroupId = groupId});
-            }
-            catch (Exception e)
-            {
-                throw;
-            }
+            var result = await _userGroupRepository.RemoveAsync(new UserGroup {ApplicationUserId = userId, GroupId = groupId});
+            if (result.Status != RepositoryStatus.Deleted) throw new Exception();
         }
 
         public async Task<ICollection<ApplicationUserDto>> GetMembersAsync(int groupId)
         {
-            var users = await _userGroupRepository.GetMembersAsync(groupId);
+            var result = await _userGroupRepository.GetMembersAsync(groupId);
+            if (result.Status != RepositoryStatus.Ok) throw new Exception();
+            var users = result.Entity.ToList();
             return _mapper.Map<ICollection<ApplicationUser>, List<ApplicationUserDto>>(users);
         }
     }

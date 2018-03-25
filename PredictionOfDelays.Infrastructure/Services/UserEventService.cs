@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using PredictionOfDelays.Core.Models;
@@ -21,32 +22,22 @@ namespace PredictionOfDelays.Infrastructure.Services
 
         public async Task AddAsync(string userId, int eventId)
         {
-            try
-            {
-                await _userEventRepository.AddAsync(new UserEvent { ApplicationUserId = userId, EventId = eventId });
-            }
-            catch (Exception e)
-            {
-                throw;
-            }
+            var result = await _userEventRepository.AddAsync(new UserEvent { ApplicationUserId = userId, EventId = eventId });
+            if (result.Status != RepositoryStatus.Created) throw new Exception();
         }
 
         public async Task RemoveAsync(string userId, int eventId)
         {
-            try
-            {
-                await _userEventRepository.RemoveAsync(new UserEvent {ApplicationUserId = userId, EventId = eventId});
-            }
-            catch (Exception e)
-            {
-                throw;
-            }
+            var result = await _userEventRepository.RemoveAsync(new UserEvent {ApplicationUserId = userId, EventId = eventId});
+            if (result.Status != RepositoryStatus.Deleted) throw new Exception();
         }
 
         public async Task<ICollection<ApplicationUserDto>> GetAttendeesAsync(int eventId)
         {
-            var user = await _userEventRepository.GetAttendeesAsync(eventId);
-            return _mapper.Map<ICollection<ApplicationUser>, List<ApplicationUserDto>>(user);
+            var result = await _userEventRepository.GetAttendeesAsync(eventId);
+            if (result.Status != RepositoryStatus.Ok) throw new Exception();
+            var users = result.Entity.ToList();
+            return _mapper.Map<ICollection<ApplicationUser>, List<ApplicationUserDto>>(users);
         }
     }
 }

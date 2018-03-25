@@ -22,52 +22,38 @@ namespace PredictionOfDelays.Infrastructure.Services
 
         public async Task<ICollection<GroupDto>> GetAsync()
         {
-            var groups = await _groupRepository.GetAllAsync().ToListAsync();
+            var result = _groupRepository.GetAllAsync();
+            if (result.Status != RepositoryStatus.Ok) throw new Exception();
+            var groups = await result.Entity.ToListAsync();
             return _mapper.Map<List<Group>, List<GroupDto>>(groups);
         }
 
         public async Task<GroupDto> GetByIdAsync(int id)
         {
-            var group = await _groupRepository.GetByIdAsync(id);
+            var result = await _groupRepository.GetByIdAsync(id);
+            if (result.Status != RepositoryStatus.Ok) throw new Exception();
+            var group = result.Entity;
             return _mapper.Map<Group, GroupDto>(group);
         }
 
         public async Task AddAsync(GroupDto groupDto)
         {
-            try
-            {
-                var group = _mapper.Map<GroupDto, Group>(groupDto);
-                await _groupRepository.AddAsync(group);
-            }
-            catch (Exception e)
-            {
-                throw;
-            }
+            var group = _mapper.Map<GroupDto, Group>(groupDto);
+            var result = await _groupRepository.AddAsync(group);
+            if (result.Status != RepositoryStatus.Created) throw new Exception();
         }
 
         public async Task RemoveAsync(int groupId)
         {
-            try
-            {
-                await _groupRepository.RemoveAsync(groupId);
-            }
-            catch (Exception e)
-            {
-                throw;
-            }
+            var result = await _groupRepository.RemoveAsync(groupId);
+            if (result.Status != RepositoryStatus.Deleted) throw new Exception();
         }
 
         public async Task UpdateAsync(GroupDto groupDto)
         {
-            try
-            {
-                var group = _mapper.Map<GroupDto, Group>(groupDto);
-                await _groupRepository.UpdateAsync(group);
-            }
-            catch (Exception e)
-            {
-                throw;
-            }
+            var group = _mapper.Map<GroupDto, Group>(groupDto);
+            var result = await _groupRepository.UpdateAsync(group);
+            if (result.Status != RepositoryStatus.Updated) throw new Exception();
         }
     }
 }

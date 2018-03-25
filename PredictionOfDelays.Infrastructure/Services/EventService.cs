@@ -22,52 +22,38 @@ namespace PredictionOfDelays.Infrastructure.Services
 
         public async Task<ICollection<EventDto>> GetAsync()
         {
-            var events = await _eventRepository.GetAllAsync().ToListAsync();
+            var result = _eventRepository.GetAllAsync();
+            if (result.Status != RepositoryStatus.Ok) throw new Exception();
+            var events = await result.Entity.ToListAsync();
             return _mapper.Map<List<Event>, List<EventDto>>(events);
         }
 
         public async Task<EventDto> GetByIdAsync(int id)
         {
-            var @event = await _eventRepository.GetByIdAsync(id);
+            var result = await _eventRepository.GetByIdAsync(id);
+            if (result.Status != RepositoryStatus.Ok) throw new Exception();
+            var @event = result.Entity;
             return _mapper.Map<Event, EventDto>(@event);
         }
 
         public async Task AddAsync(EventDto eventdto)
         {
-            try
-            {
-                var @event = _mapper.Map<EventDto, Event>(eventdto);
-                await _eventRepository.AddAsync(@event);
-            }
-            catch (Exception e)
-            {
-                throw;
-            }
+            var @event = _mapper.Map<EventDto, Event>(eventdto);
+            var result = await _eventRepository.AddAsync(@event);
+            if (result.Status != RepositoryStatus.Created) throw new Exception();
         }
 
         public async Task RemoveAsync(int eventId)
         {
-            try
-            {
-                await _eventRepository.RemoveAsync(eventId);
-            }
-            catch (Exception e)
-            {
-                throw;
-            }
+            var result = await _eventRepository.RemoveAsync(eventId);
+            if (result.Status != RepositoryStatus.Deleted) throw new Exception();
         }
 
         public async Task UpdateAsync(EventDto eventdto)
         {
-            try
-            {
-                var @event = _mapper.Map<EventDto, Event>(eventdto);
-                await _eventRepository.UpdateAsync(@event);
-            }
-            catch (Exception e)
-            {
-                throw;
-            }
+            var @event = _mapper.Map<EventDto, Event>(eventdto);
+            var result = await _eventRepository.UpdateAsync(@event);
+            if (result.Status != RepositoryStatus.Updated) throw new Exception();
         }
     }
 }
