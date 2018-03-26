@@ -91,21 +91,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FutureDateAttribute.cs" />
-    <Compile Include="Migrations\201803151438509_AddedEventsAndGroups.cs" />
-    <Compile Include="Migrations\201803151438509_AddedEventsAndGroups.Designer.cs">
-      <DependentUpon>201803151438509_AddedEventsAndGroups.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201803151555310_Revert.cs" />
-    <Compile Include="Migrations\201803151555310_Revert.Designer.cs">
-      <DependentUpon>201803151555310_Revert.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201803151618212_CreateAllTables.cs" />
-    <Compile Include="Migrations\201803151618212_CreateAllTables.Designer.cs">
-      <DependentUpon>201803151618212_CreateAllTables.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201803251812467_AddValidationOfEvents.cs" />
-    <Compile Include="Migrations\201803251812467_AddValidationOfEvents.Designer.cs">
-      <DependentUpon>201803251812467_AddValidationOfEvents.cs</DependentUpon>
+    <Compile Include="Migrations\201803261516332_InitialMigration.cs" />
+    <Compile Include="Migrations\201803261516332_InitialMigration.Designer.cs">
+      <DependentUpon>201803261516332_InitialMigration.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
@@ -133,17 +121,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201803151438509_AddedEventsAndGroups.resx">
-      <DependentUpon>201803151438509_AddedEventsAndGroups.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201803151555310_Revert.resx">
-      <DependentUpon>201803151555310_Revert.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201803151618212_CreateAllTables.resx">
-      <DependentUpon>201803151618212_CreateAllTables.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201803251812467_AddValidationOfEvents.resx">
-      <DependentUpon>201803251812467_AddValidationOfEvents.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201803261516332_InitialMigration.resx">
+      <DependentUpon>201803261516332_InitialMigration.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

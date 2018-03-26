@@ -19,7 +19,5 @@ namespace PredictionOfDelays.Core.Models
         {
             return new ApplicationDbContext();
         }
-
-
     }
 }

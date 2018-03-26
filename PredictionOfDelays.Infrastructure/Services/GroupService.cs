@@ -22,38 +22,64 @@ namespace PredictionOfDelays.Infrastructure.Services
 
         public async Task<ICollection<GroupDto>> GetAsync()
         {
-            var result = _groupRepository.GetAllAsync();
-            if (result.Status != RepositoryStatus.Ok) throw new Exception();
-            var groups = await result.Entity.ToListAsync();
+            var result = _groupRepository.GetAllAsync().Entity.Include("Users");
+
+            var groups = await result.ToListAsync();
             return _mapper.Map<List<Group>, List<GroupDto>>(groups);
         }
 
         public async Task<GroupDto> GetByIdAsync(int id)
         {
             var result = await _groupRepository.GetByIdAsync(id);
-            if (result.Status != RepositoryStatus.Ok) throw new Exception();
-            var group = result.Entity;
-            return _mapper.Map<Group, GroupDto>(group);
+
+            if (result.Status == RepositoryStatus.Ok)
+            {
+                var group = result.Entity;
+                return _mapper.Map<Group, GroupDto>(group);
+            }
+            if (result.Status == RepositoryStatus.NotFound)
+            {
+                throw new ServiceException(ErrorCodes.EntityNotFound);
+            }
+            throw new ServiceException(ErrorCodes.DatabaseError);
         }
 
-        public async Task AddAsync(GroupDto groupDto)
+        public async Task<GroupDto> AddAsync(GroupDto groupDto)
         {
             var group = _mapper.Map<GroupDto, Group>(groupDto);
             var result = await _groupRepository.AddAsync(group);
-            if (result.Status != RepositoryStatus.Created) throw new Exception();
+
+            if (result.Status == RepositoryStatus.Created)
+            {
+                var entity = result.Entity;
+                return _mapper.Map<Group, GroupDto>(entity);
+            }
+            throw new ServiceException(ErrorCodes.DatabaseError);
         }
 
         public async Task RemoveAsync(int groupId)
         {
             var result = await _groupRepository.RemoveAsync(groupId);
-            if (result.Status != RepositoryStatus.Deleted) throw new Exception();
+
+            if (result.Status == RepositoryStatus.NotFound)
+            {
+                throw new ServiceException(ErrorCodes.EntityNotFound);
+            }
+            if (result.Status == RepositoryStatus.Error)
+            {
+                throw new ServiceException(ErrorCodes.DatabaseError);
+            }
         }
 
         public async Task UpdateAsync(GroupDto groupDto)
         {
             var group = _mapper.Map<GroupDto, Group>(groupDto);
             var result = await _groupRepository.UpdateAsync(group);
-            if (result.Status != RepositoryStatus.Updated) throw new Exception();
+
+            if (result.Status == RepositoryStatus.Error)
+            {
+                throw new ServiceException(ErrorCodes.DatabaseError);
+            }
         }
     }
 }

@@ -30,16 +30,13 @@ namespace PredictionOfDelays.Infrastructure.Repositories
 
         public async Task<RepositoryActionResult<Group>> UpdateAsync(Group entity)
         {
-            if(entity == null)
-                return new RepositoryActionResult<Group>(null, RepositoryStatus.NotFound);
-
             try
             {
                 _context.Entry(entity).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
                 return new RepositoryActionResult<Group>(entity, RepositoryStatus.Updated);
             }
-            catch (Exception exception)
+            catch (Exception)
             {
                 return new RepositoryActionResult<Group>(entity, RepositoryStatus.Error);
             }
@@ -57,7 +54,7 @@ namespace PredictionOfDelays.Infrastructure.Repositories
                 await _context.SaveChangesAsync();
                 return new RepositoryActionResult<Group>(e, RepositoryStatus.Deleted);
             }
-            catch (Exception exception)
+            catch (Exception)
             {
                 return new RepositoryActionResult<Group>(e, RepositoryStatus.Error);
             }
@@ -71,7 +68,7 @@ namespace PredictionOfDelays.Infrastructure.Repositories
                 await _context.SaveChangesAsync();
                 return new RepositoryActionResult<Group>(group, RepositoryStatus.Created);
             }
-            catch (Exception exception)
+            catch (Exception)
             {
                 return new RepositoryActionResult<Group>(group, RepositoryStatus.Error);
             }

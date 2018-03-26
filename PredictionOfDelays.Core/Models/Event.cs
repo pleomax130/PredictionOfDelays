@@ -22,13 +22,13 @@ namespace PredictionOfDelays.Core.Models
 
         [MaxLength(250)]
         public string Description { get; set; }
-        public ICollection<ApplicationUser> Users { get; set; }
+        public ICollection<UserEvent> Users { get; set; }
 
         //todo add localizatio, administrators and restrictions
 
         public Event()
         {
-           Users = new List<ApplicationUser>();
+           Users = new List<UserEvent>();
         }
 
         

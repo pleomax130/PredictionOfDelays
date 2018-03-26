@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using Autofac;
 using PredictionOfDelays.Core.Repositories;
-using PredictionOfDelays.Infrastructure.Repositories;
 using Module = Autofac.Module;
 
 namespace PredictionOfDelays.Infrastructure.IoC.Modules

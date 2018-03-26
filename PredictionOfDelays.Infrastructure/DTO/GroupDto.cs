@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using PredictionOfDelays.Core.Models;
 
 namespace PredictionOfDelays.Infrastructure.DTO
 {
@@ -13,6 +14,6 @@ namespace PredictionOfDelays.Infrastructure.DTO
 
         [MaxLength(250)]
         public string Description { get; set; }
-        public List<ApplicationUserDto> Users { get; set; }
+        public List<UserGroup> Users { get; set; }
     }
 }

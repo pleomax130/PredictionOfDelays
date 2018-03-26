@@ -18,13 +18,13 @@ namespace PredictionOfDelays.Core.Models
 
         [MaxLength(250)]
         public string Description { get; set; }
-        public ICollection<ApplicationUser> Users { get; set; }
+        public ICollection<UserGroup> Users { get; set; }
 
         //todo add administrators and restrictions
 
         public Group()
         {
-            Users = new List<ApplicationUser>();
+            Users = new List<UserGroup>();
         }
     }
 }

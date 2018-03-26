@@ -9,7 +9,6 @@ using System.Web.Http.Results;
 using PredictionOfDelays.Infrastructure;
 using PredictionOfDelays.Infrastructure.DTO;
 using PredictionOfDelays.Infrastructure.Mappers;
-using PredictionOfDelays.Infrastructure.Repositories;
 using PredictionOfDelays.Infrastructure.Services;
 
 namespace PredictionOfDelays.Api.Controllers
@@ -27,15 +26,8 @@ namespace PredictionOfDelays.Api.Controllers
 
         public async Task<IHttpActionResult> Get()
         {
-            try
-            {
-                var events = await _eventService.GetAsync();
-                return Ok(events);
-            }
-            catch (ServiceException)
-            {
-                return InternalServerError();
-            }
+            var events = await _eventService.GetAsync();
+            return Ok(events);
         }
 
         [Route("{eventId}")]
@@ -64,30 +56,16 @@ namespace PredictionOfDelays.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            try
-            {
-                var result = await _eventService.AddAsync(@event);
-                return Created(Url.Request.RequestUri+"/"+result.EventId, result);
-            }
-            catch (ServiceException)
-            {
-                return InternalServerError();
-            }
+            var result = await _eventService.AddAsync(@event);
+            return Created(Url.Request.RequestUri+"/"+result.EventId, result);
         }
 
         [HttpDelete]
         [Route("{eventId}")]
         public async Task<IHttpActionResult> DeleteEvent(int eventId)
         {
-            try
-            {
-                await _eventService.RemoveAsync(eventId);
-                return StatusCode(HttpStatusCode.NoContent);
-            }
-            catch (ServiceException)
-            {
-                return InternalServerError();
-            }
+            await _eventService.RemoveAsync(eventId);
+            return StatusCode(HttpStatusCode.NoContent);
         }
 
         [HttpPut]
@@ -99,15 +77,8 @@ namespace PredictionOfDelays.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            try
-            {
-                await _eventService.UpdateAsync(@event);
-                return Ok();
-            }
-            catch (ServiceException)
-            {
-                return InternalServerError();
-            }
+            await _eventService.UpdateAsync(@event);
+            return Ok();
         }
     }
 }
