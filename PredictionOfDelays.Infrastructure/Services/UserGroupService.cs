@@ -20,6 +20,7 @@ namespace PredictionOfDelays.Infrastructure.Services
             _mapper = mapper;
         }
 
+        //TODO
         public async Task AddAsync(string userId, int groupId)
         {
             var result = await _userGroupRepository.AddAsync(new UserGroup {ApplicationUserId = userId, GroupId = groupId});
@@ -28,16 +29,31 @@ namespace PredictionOfDelays.Infrastructure.Services
 
         public async Task RemoveAsync(string userId, int groupId)
         {
-            var result = await _userGroupRepository.RemoveAsync(new UserGroup {ApplicationUserId = userId, GroupId = groupId});
-            if (result.Status != RepositoryStatus.Deleted) throw new Exception();
+            var result =
+                await _userGroupRepository.RemoveAsync(new UserGroup {ApplicationUserId = userId, GroupId = groupId});
+            if (result.Status == RepositoryStatus.NotFound)
+            {
+                throw new ServiceException(ErrorCodes.EntityNotFound);
+            }
+            if (result.Status == RepositoryStatus.Error)
+            {
+                throw new ServiceException(ErrorCodes.DatabaseError);
+            }
         }
 
         public async Task<ICollection<ApplicationUserDto>> GetMembersAsync(int groupId)
         {
             var result = await _userGroupRepository.GetMembersAsync(groupId);
-            if (result.Status != RepositoryStatus.Ok) throw new Exception();
-            var users = result.Entity.ToList();
-            return _mapper.Map<ICollection<ApplicationUser>, List<ApplicationUserDto>>(users);
+
+            if (result.Status == RepositoryStatus.Ok)
+            {
+                return _mapper.Map<ICollection<ApplicationUser>, List<ApplicationUserDto>>(result.Entity);
+            }
+            if (result.Status == RepositoryStatus.NotFound)
+            {
+                throw new ServiceException(ErrorCodes.EntityNotFound);
+            }
+            throw new ServiceException(ErrorCodes.DatabaseError);
         }
     }
 }

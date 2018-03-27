@@ -6,10 +6,12 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
+using PredictionOfDelays.Core.Models;
 using PredictionOfDelays.Infrastructure;
 using PredictionOfDelays.Infrastructure.DTO;
 using PredictionOfDelays.Infrastructure.Mappers;
 using PredictionOfDelays.Infrastructure.Services;
+using WebGrease.Css.Extensions;
 
 namespace PredictionOfDelays.Api.Controllers
 {
@@ -19,9 +21,10 @@ namespace PredictionOfDelays.Api.Controllers
         private readonly IGroupService _groupService;
         private readonly IUserGroupService _userGroupService;
 
-        public GroupsController(IGroupService groupService)
+        public GroupsController(IGroupService groupService, IUserGroupService userGroupService)
         {
             _groupService = groupService;
+            _userGroupService = userGroupService;
         }
         public async Task<IHttpActionResult> Get()
         {

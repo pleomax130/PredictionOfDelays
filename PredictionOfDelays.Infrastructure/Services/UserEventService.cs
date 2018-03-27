@@ -20,6 +20,7 @@ namespace PredictionOfDelays.Infrastructure.Services
             _mapper = mapper;
         }
 
+        //TODO
         public async Task AddAsync(string userId, int eventId)
         {
             var result = await _userEventRepository.AddAsync(new UserEvent { ApplicationUserId = userId, EventId = eventId });
@@ -29,15 +30,29 @@ namespace PredictionOfDelays.Infrastructure.Services
         public async Task RemoveAsync(string userId, int eventId)
         {
             var result = await _userEventRepository.RemoveAsync(new UserEvent {ApplicationUserId = userId, EventId = eventId});
-            if (result.Status != RepositoryStatus.Deleted) throw new Exception();
+            if (result.Status == RepositoryStatus.NotFound)
+            {
+                throw new ServiceException(ErrorCodes.EntityNotFound);
+            }
+            if (result.Status == RepositoryStatus.Error)
+            {
+                throw new ServiceException(ErrorCodes.DatabaseError);
+            }
         }
 
         public async Task<ICollection<ApplicationUserDto>> GetAttendeesAsync(int eventId)
         {
             var result = await _userEventRepository.GetAttendeesAsync(eventId);
-            if (result.Status != RepositoryStatus.Ok) throw new Exception();
-            var users = result.Entity.ToList();
-            return _mapper.Map<ICollection<ApplicationUser>, List<ApplicationUserDto>>(users);
+
+            if (result.Status == RepositoryStatus.Ok)
+            {
+                return _mapper.Map<ICollection<ApplicationUser>, List<ApplicationUserDto>>(result.Entity);
+            }
+            if (result.Status == RepositoryStatus.NotFound)
+            {
+                throw new ServiceException(ErrorCodes.EntityNotFound);
+            }
+            throw new ServiceException(ErrorCodes.DatabaseError);
         }
     }
 }

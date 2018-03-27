@@ -22,7 +22,7 @@ namespace PredictionOfDelays.Infrastructure.Services
 
         public async Task<ICollection<GroupDto>> GetAsync()
         {
-            var result = _groupRepository.GetAllAsync().Entity.Include("Users");
+            var result = _groupRepository.GetAllAsync().Entity;
 
             var groups = await result.ToListAsync();
             return _mapper.Map<List<Group>, List<GroupDto>>(groups);

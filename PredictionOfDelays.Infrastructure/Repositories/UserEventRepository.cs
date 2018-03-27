@@ -65,7 +65,7 @@ namespace PredictionOfDelays.Infrastructure.Repositories
                 return new RepositoryActionResult<ICollection<ApplicationUser>>(null, RepositoryStatus.NotFound);
             }
 
-            var attendees = await _context.UserEvents.Include("AspNetUsers").Where(ue => ue.EventId == eventId)
+            var attendees = await _context.UserEvents.Include("ApplicationUser").Where(ue => ue.EventId == eventId)
                 .Select(ue => ue.ApplicationUser).ToListAsync();
 
             return new RepositoryActionResult<ICollection<ApplicationUser>>(attendees, RepositoryStatus.Ok);
