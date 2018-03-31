@@ -20,11 +20,15 @@ namespace PredictionOfDelays.Infrastructure.Services
             _mapper = mapper;
         }
 
-        //TODO
         public async Task AddAsync(string userId, int eventId)
         {
             var result = await _userEventRepository.AddAsync(new UserEvent { ApplicationUserId = userId, EventId = eventId });
-            if (result.Status != RepositoryStatus.Created) throw new Exception();
+
+            if (result.Status == RepositoryStatus.NotFound)
+            {
+                throw new ServiceException(ErrorCodes.BadRequest);
+            }
+            throw new ServiceException(ErrorCodes.DatabaseError);
         }
 
         public async Task RemoveAsync(string userId, int eventId)

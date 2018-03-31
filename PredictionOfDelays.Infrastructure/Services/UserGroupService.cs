@@ -20,11 +20,15 @@ namespace PredictionOfDelays.Infrastructure.Services
             _mapper = mapper;
         }
 
-        //TODO
         public async Task AddAsync(string userId, int groupId)
         {
             var result = await _userGroupRepository.AddAsync(new UserGroup {ApplicationUserId = userId, GroupId = groupId});
-            if (result.Status != RepositoryStatus.Created) throw new Exception();
+
+            if (result.Status == RepositoryStatus.NotFound)
+            {
+                throw new ServiceException(ErrorCodes.BadRequest);
+            }
+            throw new ServiceException(ErrorCodes.DatabaseError);
         }
 
         public async Task RemoveAsync(string userId, int groupId)
