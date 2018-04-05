@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Results;
+using Microsoft.AspNet.Identity;
 using PredictionOfDelays.Infrastructure;
 using PredictionOfDelays.Infrastructure.DTO;
 using PredictionOfDelays.Infrastructure.Mappers;
@@ -19,9 +20,10 @@ namespace PredictionOfDelays.Api.Controllers
         private readonly IEventService _eventService;
         private readonly IUserEventService _userEventService;
 
-        public EventsController(IEventService eventService)
+        public EventsController(IEventService eventService, IUserEventService userEventService)
         {
             _eventService = eventService;
+            _userEventService = userEventService;
         }
 
         public async Task<IHttpActionResult> Get()
@@ -36,6 +38,8 @@ namespace PredictionOfDelays.Api.Controllers
             try
             {
                 var @event = await _eventService.GetByIdAsync(eventId);
+                var attendees = await _userEventService.GetAttendeesAsync(eventId);
+                @event.Users = attendees;
                 return Ok(@event);
             }
             catch (ServiceException e)
@@ -79,6 +83,46 @@ namespace PredictionOfDelays.Api.Controllers
 
             await _eventService.UpdateAsync(@event);
             return Ok();
+        }
+
+        [HttpPost]
+        [Route("{eventId}/attendees")]
+        public async Task<IHttpActionResult> Join(int eventId)
+        {
+            try
+            {
+                var userId = User.Identity.GetUserId();
+                await _userEventService.AddAsync(userId, eventId);
+                return Ok();
+            }
+            catch (ServiceException e)
+            {
+                if (e.Code == ErrorCodes.BadRequest)
+                {
+                    return BadRequest();
+                }
+                return InternalServerError();
+            }
+        }
+
+        [HttpDelete]
+        [Route("{eventId}/attendees")]
+        public async Task<IHttpActionResult> Resign(int eventId)
+        {
+            try
+            {
+                var userId = User.Identity.GetUserId();
+                await _userEventService.RemoveAsync(userId, eventId);
+                return StatusCode(HttpStatusCode.NoContent);
+            }
+            catch (ServiceException e)
+            {
+                if (e.Code == ErrorCodes.BadRequest)
+                {
+                    return BadRequest();
+                }
+                return InternalServerError();
+            }
         }
     }
 }
