@@ -56,19 +56,19 @@ namespace PredictionOfDelays.Infrastructure.Repositories
             }
         }
 
-        public async Task<RepositoryActionResult<ICollection<ApplicationUser>>> GetAttendeesAsync(int eventId)
+        public async Task<RepositoryActionResult<IQueryable<ApplicationUser>>> GetAttendeesAsync(int eventId)
         {
             var @event = await _context.Events.FirstOrDefaultAsync(e => e.EventId == eventId);
 
             if (@event == null)
             {
-                return new RepositoryActionResult<ICollection<ApplicationUser>>(null, RepositoryStatus.NotFound);
+                return new RepositoryActionResult<IQueryable<ApplicationUser>>(null, RepositoryStatus.NotFound);
             }
 
-            var attendees = await _context.UserEvents.Include("ApplicationUser").Where(ue => ue.EventId == eventId)
-                .Select(ue => ue.ApplicationUser).ToListAsync();
+            var attendees = _context.UserEvents.Include("ApplicationUser").Where(ue => ue.EventId == eventId)
+                .Select(ue => ue.ApplicationUser);
 
-            return new RepositoryActionResult<ICollection<ApplicationUser>>(attendees, RepositoryStatus.Ok);
+            return new RepositoryActionResult<IQueryable<ApplicationUser>>(attendees, RepositoryStatus.Ok);
 
         }
     }

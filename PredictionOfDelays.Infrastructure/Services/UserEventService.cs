@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -28,7 +29,10 @@ namespace PredictionOfDelays.Infrastructure.Services
             {
                 throw new ServiceException(ErrorCodes.BadRequest);
             }
-            throw new ServiceException(ErrorCodes.DatabaseError);
+            if (result.Status == RepositoryStatus.Error)
+            {
+                throw new ServiceException(ErrorCodes.DatabaseError);
+            }
         }
 
         public async Task RemoveAsync(string userId, int eventId)
@@ -44,13 +48,14 @@ namespace PredictionOfDelays.Infrastructure.Services
             }
         }
 
-        public async Task<ICollection<ApplicationUserDto>> GetAttendeesAsync(int eventId)
+        public async Task<List<ApplicationUserDto>> GetAttendeesAsync(int eventId)
         {
             var result = await _userEventRepository.GetAttendeesAsync(eventId);
 
             if (result.Status == RepositoryStatus.Ok)
             {
-                return _mapper.Map<ICollection<ApplicationUser>, List<ApplicationUserDto>>(result.Entity);
+                var attendees = await result.Entity.ToListAsync();
+                return _mapper.Map<List<ApplicationUser>, List<ApplicationUserDto>>(attendees);
             }
             if (result.Status == RepositoryStatus.NotFound)
             {

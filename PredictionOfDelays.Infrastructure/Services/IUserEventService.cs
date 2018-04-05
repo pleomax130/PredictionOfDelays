@@ -8,6 +8,6 @@ namespace PredictionOfDelays.Infrastructure.Services
     {
         Task AddAsync(string userId, int eventId);
         Task RemoveAsync(string userId, int eventId);
-        Task<ICollection<ApplicationUserDto>> GetAttendeesAsync(int eventId);
+        Task<List<ApplicationUserDto>> GetAttendeesAsync(int eventId);
     }
 }

@@ -16,6 +16,7 @@ namespace PredictionOfDelays.Infrastructure.Repositories
         {
             var group = await _context.Groups.FirstOrDefaultAsync(g => g.GroupId == userGroup.GroupId);
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userGroup.ApplicationUserId);
+            var userIds =  _context.Users.Select(u => u.Id).ToList();
 
             if (group == null || user == null)
             {
@@ -56,19 +57,19 @@ namespace PredictionOfDelays.Infrastructure.Repositories
             }
         }
 
-        public async Task<RepositoryActionResult<ICollection<ApplicationUser>>> GetMembersAsync(int groupId)
+        public async Task<RepositoryActionResult<IQueryable<ApplicationUser>>> GetMembersAsync(int groupId)
         {
             var group = await _context.Groups.FirstOrDefaultAsync(g => g.GroupId == groupId);
 
             if (group == null)
             {
-                return new RepositoryActionResult<ICollection<ApplicationUser>>(null, RepositoryStatus.NotFound);
+                return new RepositoryActionResult<IQueryable<ApplicationUser>>(null, RepositoryStatus.NotFound);
             }
 
-            var attendees = await _context.UserGroups.Include("ApplicationUser").Where(ug => ug.GroupId == groupId)
-                .Select(ue => ue.ApplicationUser).ToListAsync();
+            var attendees = _context.UserGroups.Include("ApplicationUser").Where(ug => ug.GroupId == groupId)
+                .Select(ue => ue.ApplicationUser);
 
-            return new RepositoryActionResult<ICollection<ApplicationUser>>(attendees, RepositoryStatus.Ok);
+            return new RepositoryActionResult<IQueryable<ApplicationUser>>(attendees, RepositoryStatus.Ok);
         }
     }
 }

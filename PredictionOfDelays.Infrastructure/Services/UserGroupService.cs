@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -28,7 +29,10 @@ namespace PredictionOfDelays.Infrastructure.Services
             {
                 throw new ServiceException(ErrorCodes.BadRequest);
             }
-            throw new ServiceException(ErrorCodes.DatabaseError);
+            if (result.Status == RepositoryStatus.Error)
+            {
+                throw new ServiceException(ErrorCodes.DatabaseError);
+            }
         }
 
         public async Task RemoveAsync(string userId, int groupId)
@@ -45,13 +49,14 @@ namespace PredictionOfDelays.Infrastructure.Services
             }
         }
 
-        public async Task<ICollection<ApplicationUserDto>> GetMembersAsync(int groupId)
+        public async Task<List<ApplicationUserDto>> GetMembersAsync(int groupId)
         {
             var result = await _userGroupRepository.GetMembersAsync(groupId);
 
             if (result.Status == RepositoryStatus.Ok)
             {
-                return _mapper.Map<ICollection<ApplicationUser>, List<ApplicationUserDto>>(result.Entity);
+                var members = await result.Entity.ToListAsync();
+                return _mapper.Map<ICollection<ApplicationUser>, List<ApplicationUserDto>>(members);
             }
             if (result.Status == RepositoryStatus.NotFound)
             {
