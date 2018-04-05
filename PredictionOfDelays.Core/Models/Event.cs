@@ -10,21 +10,19 @@ namespace PredictionOfDelays.Core.Models
     public class Event : IEntity
     {
         public int EventId { get; set; }
-
+        public string OwnerUserId { get; set; }
         [Required]
         [MaxLength(50),MinLength(5)]
         public string Name { get; set; }
-
         [Required]
         [Display(Name = "Date of event")]
         [FutureDate(ErrorMessage = "Enter future date")]
         public DateTime EventDate { get; set; }
-
         [MaxLength(250)]
         public string Description { get; set; }
         public ICollection<UserEvent> Users { get; set; }
-
-        //todo add localizatio, administrators and restrictions
+        [Required]
+        public Localization Localization { get; set; }
 
         public Event()
         {

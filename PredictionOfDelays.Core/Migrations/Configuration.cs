@@ -28,13 +28,6 @@ namespace PredictionOfDelays.Core.Migrations
             //      new Person { FullName = "Rowan Miller" }
             //    );
             //
-            var g = new Group() {Name = "first"};
-            context.Groups.Add(g);
-            context.SaveChanges();
-            var user = context.Users.FirstOrDefault(u => u.Email == "halo@hallo.com");
-            var group = context.Groups.Find(1);
-            context.UserGroups.Add(new UserGroup() {Group = group, ApplicationUser = user});
-            context.SaveChanges();
         }
 
         

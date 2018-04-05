@@ -14,6 +14,7 @@ namespace PredictionOfDelays.Infrastructure.Mappers
                     cfg.CreateMap<Group, GroupDto>();
                     cfg.CreateMap<GroupDto, Group>();
                     cfg.CreateMap<EventDto, Event>();
+                    cfg.CreateMap<Localization, LocalizationDto>();
                 })
                 .CreateMapper();
     }

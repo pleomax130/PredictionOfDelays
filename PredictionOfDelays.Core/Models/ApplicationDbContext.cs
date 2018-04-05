@@ -9,7 +9,7 @@ namespace PredictionOfDelays.Core.Models
         public DbSet<Group> Groups { get; set; }
         public DbSet<UserGroup> UserGroups { get; set; }
         public DbSet<UserEvent> UserEvents { get; set; }
-
+        public DbSet<Localization> Localizations { get; set; }
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {

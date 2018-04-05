@@ -11,7 +11,7 @@ namespace PredictionOfDelays.Core.Models
     public class Group : IEntity
     {
         public int GroupId { get; set; }
-
+        public string OwnerUserId { get; set; }
         [Required]
         [MaxLength(40), MinLength(5)]
         public string Name { get; set; }
@@ -19,8 +19,6 @@ namespace PredictionOfDelays.Core.Models
         [MaxLength(250)]
         public string Description { get; set; }
         public ICollection<UserGroup> Users { get; set; }
-
-        //todo add administrators and restrictions
 
         public Group()
         {

@@ -120,6 +120,7 @@
     <Compile Include="DTO\ApplicationUserDto.cs" />
     <Compile Include="DTO\EventDto.cs" />
     <Compile Include="DTO\GroupDto.cs" />
+    <Compile Include="DTO\LocalizationDto.cs" />
     <Compile Include="ErrorCodes.cs" />
     <Compile Include="IoC\Modules\RepositoryModule.cs" />
     <Compile Include="IoC\Modules\ServiceModule.cs" />
