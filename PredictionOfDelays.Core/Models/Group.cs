@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Security.AccessControl;
 using System.Text;
@@ -10,15 +11,18 @@ namespace PredictionOfDelays.Core.Models
     public class Group : IEntity
     {
         public int GroupId { get; set; }
+        public string OwnerUserId { get; set; }
+        [Required]
+        [MaxLength(40), MinLength(5)]
         public string Name { get; set; }
-        public string Description { get; set; }
-        public ICollection<ApplicationUser> Users { get; set; }
 
-        //todo add administrators and restrictions
+        [MaxLength(250)]
+        public string Description { get; set; }
+        public ICollection<UserGroup> Users { get; set; }
 
         public Group()
         {
-            Users = new List<ApplicationUser>();
+            Users = new List<UserGroup>();
         }
     }
 }

@@ -90,17 +90,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Migrations\201803151438509_AddedEventsAndGroups.cs" />
-    <Compile Include="Migrations\201803151438509_AddedEventsAndGroups.Designer.cs">
-      <DependentUpon>201803151438509_AddedEventsAndGroups.cs</DependentUpon>
+    <Compile Include="FutureDateAttribute.cs" />
+    <Compile Include="Migrations\201803261516332_InitialMigration.cs" />
+    <Compile Include="Migrations\201803261516332_InitialMigration.Designer.cs">
+      <DependentUpon>201803261516332_InitialMigration.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201803151555310_Revert.cs" />
-    <Compile Include="Migrations\201803151555310_Revert.Designer.cs">
-      <DependentUpon>201803151555310_Revert.cs</DependentUpon>
+    <Compile Include="Migrations\201804051416195_Localization.cs" />
+    <Compile Include="Migrations\201804051416195_Localization.Designer.cs">
+      <DependentUpon>201804051416195_Localization.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201803151618212_CreateAllTables.cs" />
-    <Compile Include="Migrations\201803151618212_CreateAllTables.Designer.cs">
-      <DependentUpon>201803151618212_CreateAllTables.cs</DependentUpon>
+    <Compile Include="Migrations\201804051433298_Localizationv2.cs" />
+    <Compile Include="Migrations\201804051433298_Localizationv2.Designer.cs">
+      <DependentUpon>201804051433298_Localizationv2.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
@@ -113,6 +114,7 @@
     <Compile Include="Models\Localization.cs" />
     <Compile Include="Models\UserEvent.cs" />
     <Compile Include="Models\UserGroup.cs" />
+    <Compile Include="PredictionOfDelaysException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\IEventRepository.cs" />
     <Compile Include="Repositories\IGroupRepository.cs" />
@@ -127,14 +129,14 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201803151438509_AddedEventsAndGroups.resx">
-      <DependentUpon>201803151438509_AddedEventsAndGroups.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201803261516332_InitialMigration.resx">
+      <DependentUpon>201803261516332_InitialMigration.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201803151555310_Revert.resx">
-      <DependentUpon>201803151555310_Revert.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201804051416195_Localization.resx">
+      <DependentUpon>201804051416195_Localization.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201803151618212_CreateAllTables.resx">
-      <DependentUpon>201803151618212_CreateAllTables.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201804051433298_Localizationv2.resx">
+      <DependentUpon>201804051433298_Localizationv2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

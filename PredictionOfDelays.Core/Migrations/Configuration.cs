@@ -28,7 +28,6 @@ namespace PredictionOfDelays.Core.Migrations
             //      new Person { FullName = "Rowan Miller" }
             //    );
             //
-
         }
 
         

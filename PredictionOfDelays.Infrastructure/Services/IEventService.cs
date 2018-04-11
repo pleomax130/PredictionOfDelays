@@ -8,7 +8,7 @@ namespace PredictionOfDelays.Infrastructure.Services
     {
         Task<ICollection<EventDto>> GetAsync();
         Task<EventDto> GetByIdAsync(int id);
-        Task AddAsync(EventDto @event);
+        Task<EventDto> AddAsync(EventDto @event);
         Task RemoveAsync(int eventId);
         Task UpdateAsync(EventDto @event);
     }

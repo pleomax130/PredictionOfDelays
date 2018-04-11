@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using PredictionOfDelays.Core.Models;
@@ -21,32 +23,46 @@ namespace PredictionOfDelays.Infrastructure.Services
 
         public async Task AddAsync(string userId, int groupId)
         {
-            try
+            var result = await _userGroupRepository.AddAsync(new UserGroup {ApplicationUserId = userId, GroupId = groupId});
+
+            if (result.Status == RepositoryStatus.NotFound)
             {
-                await _userGroupRepository.AddAsync(new UserGroup {ApplicationUserId = userId, GroupId = groupId});
+                throw new ServiceException(ErrorCodes.BadRequest);
             }
-            catch (Exception e)
+            if (result.Status == RepositoryStatus.Error)
             {
-                throw;
+                throw new ServiceException(ErrorCodes.DatabaseError);
             }
         }
 
         public async Task RemoveAsync(string userId, int groupId)
         {
-            try
-            {
+            var result =
                 await _userGroupRepository.RemoveAsync(new UserGroup {ApplicationUserId = userId, GroupId = groupId});
-            }
-            catch (Exception e)
+            if (result.Status == RepositoryStatus.NotFound)
             {
-                throw;
+                throw new ServiceException(ErrorCodes.EntityNotFound);
+            }
+            if (result.Status == RepositoryStatus.Error)
+            {
+                throw new ServiceException(ErrorCodes.DatabaseError);
             }
         }
 
-        public async Task<ICollection<ApplicationUserDto>> GetMembersAsync(int groupId)
+        public async Task<List<ApplicationUserDto>> GetMembersAsync(int groupId)
         {
-            var users = await _userGroupRepository.GetMembersAsync(groupId);
-            return _mapper.Map<ICollection<ApplicationUser>, List<ApplicationUserDto>>(users);
+            var result = await _userGroupRepository.GetMembersAsync(groupId);
+
+            if (result.Status == RepositoryStatus.Ok)
+            {
+                var members = await result.Entity.ToListAsync();
+                return _mapper.Map<ICollection<ApplicationUser>, List<ApplicationUserDto>>(members);
+            }
+            if (result.Status == RepositoryStatus.NotFound)
+            {
+                throw new ServiceException(ErrorCodes.EntityNotFound);
+            }
+            throw new ServiceException(ErrorCodes.DatabaseError);
         }
     }
 }

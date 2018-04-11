@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,22 +12,64 @@ namespace PredictionOfDelays.Infrastructure.Repositories
     {
         private readonly ApplicationDbContext _context = new ApplicationDbContext();
 
-        public async Task AddAsync(UserEvent userEvent)
+        public async Task<RepositoryActionResult<UserEvent>> AddAsync(UserEvent userEvent)
         {
-            _context.UserEvents.Add(userEvent);
-            await _context.SaveChangesAsync();
+            var @event = await _context.Events.FirstOrDefaultAsync(e => e.EventId == userEvent.EventId);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userEvent.ApplicationUserId);
+
+            if (@event == null || user == null)
+            {
+                return new RepositoryActionResult<UserEvent>(userEvent, RepositoryStatus.NotFound);
+            }
+
+            try
+            {
+                _context.UserEvents.Add(userEvent);
+                await _context.SaveChangesAsync();
+                return new RepositoryActionResult<UserEvent>(userEvent, RepositoryStatus.Created);
+            }
+            catch (Exception exception)
+            {
+                return new RepositoryActionResult<UserEvent>(userEvent, RepositoryStatus.Error);
+            }
         }
 
-        public async Task RemoveAsync(UserEvent userEvent)
+        public async Task<RepositoryActionResult<UserEvent>> RemoveAsync(UserEvent userEvent)
         {
-            _context.UserEvents.Remove(userEvent);
-            await _context.SaveChangesAsync();
+            var ue = await _context.UserEvents.FirstOrDefaultAsync(usEv =>
+                usEv.EventId == userEvent.EventId && usEv.ApplicationUserId == userEvent.ApplicationUserId);
+
+            if (ue == null)
+            {
+                return new RepositoryActionResult<UserEvent>(null, RepositoryStatus.NotFound);
+            }
+
+            try
+            {
+                _context.UserEvents.Remove(userEvent);
+                await _context.SaveChangesAsync();
+                return new RepositoryActionResult<UserEvent>(userEvent, RepositoryStatus.Deleted);
+            }
+            catch (Exception exception)
+            {
+                return new RepositoryActionResult<UserEvent>(userEvent, RepositoryStatus.Error);
+            }
         }
 
-        public async Task<ICollection<ApplicationUser>> GetAttendeesAsync(int eventId)
+        public async Task<RepositoryActionResult<IQueryable<ApplicationUser>>> GetAttendeesAsync(int eventId)
         {
-            var users = await _context.UserEvents.Where(ue => ue.EventId == eventId).Select(u => u.ApplicationUser).ToListAsync();
-            return users;
+            var @event = await _context.Events.FirstOrDefaultAsync(e => e.EventId == eventId);
+
+            if (@event == null)
+            {
+                return new RepositoryActionResult<IQueryable<ApplicationUser>>(null, RepositoryStatus.NotFound);
+            }
+
+            var attendees = _context.UserEvents.Include("ApplicationUser").Where(ue => ue.EventId == eventId)
+                .Select(ue => ue.ApplicationUser);
+
+            return new RepositoryActionResult<IQueryable<ApplicationUser>>(attendees, RepositoryStatus.Ok);
+
         }
     }
 }

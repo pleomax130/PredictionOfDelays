@@ -6,10 +6,10 @@ namespace PredictionOfDelays.Core.Repositories
 {
     public interface IGroupRepository : IRepository
     {
-        IQueryable<Group> GetAllAsync();
-        Task<Group> GetByIdAsync(int id);
-        Task UpdateAsync(Group entity);
-        Task RemoveAsync(int id);
-        Task AddAsync(Group group);
+        RepositoryActionResult<IQueryable<Group>> GetAllAsync();
+        Task<RepositoryActionResult<Group>> GetByIdAsync(int id);
+        Task<RepositoryActionResult<Group>> UpdateAsync(Group entity);
+        Task<RepositoryActionResult<Group>> RemoveAsync(int id);
+        Task<RepositoryActionResult<Group>> AddAsync(Group group);
     }
 }

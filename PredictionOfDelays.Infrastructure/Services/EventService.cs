@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Threading.Tasks;
 using AutoMapper;
+using PredictionOfDelays.Core;
 using PredictionOfDelays.Core.Models;
 using PredictionOfDelays.Core.Repositories;
 using PredictionOfDelays.Infrastructure.DTO;
@@ -22,51 +23,63 @@ namespace PredictionOfDelays.Infrastructure.Services
 
         public async Task<ICollection<EventDto>> GetAsync()
         {
-            var events = await _eventRepository.GetAllAsync().ToListAsync();
+            var result = _eventRepository.GetAllAsync();
+
+            var events = await result.Entity.ToListAsync();
             return _mapper.Map<List<Event>, List<EventDto>>(events);
         }
 
         public async Task<EventDto> GetByIdAsync(int id)
         {
-            var @event = await _eventRepository.GetByIdAsync(id);
-            return _mapper.Map<Event, EventDto>(@event);
+            var result = await _eventRepository.GetByIdAsync(id);
+
+            if (result.Status == RepositoryStatus.Ok)
+            {
+                var @event = result.Entity;
+                return _mapper.Map<Event, EventDto>(@event);
+            }
+            if (result.Status == RepositoryStatus.NotFound)
+            {
+                throw new ServiceException(ErrorCodes.EntityNotFound);
+            }
+            throw new ServiceException(ErrorCodes.DatabaseError);
         }
 
-        public async Task AddAsync(EventDto eventdto)
+        public async Task<EventDto> AddAsync(EventDto eventdto)
         {
-            try
+            var @event = _mapper.Map<EventDto, Event>(eventdto);
+            var result = await _eventRepository.AddAsync(@event);
+
+            if (result.Status == RepositoryStatus.Created)
             {
-                var @event = _mapper.Map<EventDto, Event>(eventdto);
-                await _eventRepository.AddAsync(@event);
+                var entity = result.Entity;
+                return _mapper.Map<Event, EventDto>(entity);
             }
-            catch (Exception e)
-            {
-                throw;
-            }
+            throw new ServiceException(ErrorCodes.DatabaseError);
         }
 
         public async Task RemoveAsync(int eventId)
         {
-            try
+            var result = await _eventRepository.RemoveAsync(eventId);
+
+            if (result.Status == RepositoryStatus.NotFound)
             {
-                await _eventRepository.RemoveAsync(eventId);
+                throw new ServiceException(ErrorCodes.EntityNotFound);
             }
-            catch (Exception e)
+            if (result.Status == RepositoryStatus.Error)
             {
-                throw;
+                throw new ServiceException(ErrorCodes.DatabaseError);
             }
         }
 
         public async Task UpdateAsync(EventDto eventdto)
         {
-            try
+            var @event = _mapper.Map<EventDto, Event>(eventdto);
+            var result = await _eventRepository.UpdateAsync(@event);
+
+            if (result.Status == RepositoryStatus.Error)
             {
-                var @event = _mapper.Map<EventDto, Event>(eventdto);
-                await _eventRepository.UpdateAsync(@event);
-            }
-            catch (Exception e)
-            {
-                throw;
+                throw new ServiceException(ErrorCodes.DatabaseError);
             }
         }
     }

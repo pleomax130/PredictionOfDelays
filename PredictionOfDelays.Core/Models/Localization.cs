@@ -8,15 +8,16 @@ namespace PredictionOfDelays.Core.Models
 {
     public class Localization
     {
-        public double Latitude { get; set; }
-        public double Longitude { get; set; }
+        public int LocalizationId { get; set; }
+        public string Latitude { get; set; }
+        public string Longitude { get; set; }
 
         public Localization()
         {
             
         }
 
-        public Localization(double latitude, double longitude)
+        public Localization(string latitude, string longitude)
         {
             Latitude = latitude;
             Longitude = longitude;

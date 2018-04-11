@@ -9,7 +9,7 @@ namespace PredictionOfDelays.Infrastructure.Services
         //todo dodac zwracanie obekietu po dodaniu i usunieciu
         Task<ICollection<GroupDto>> GetAsync();
         Task<GroupDto> GetByIdAsync(int id);
-        Task AddAsync(GroupDto group);
+        Task<GroupDto> AddAsync(GroupDto group);
         Task RemoveAsync(int groupId);
         Task UpdateAsync(GroupDto group);
     }

@@ -9,10 +9,10 @@ namespace PredictionOfDelays.Core.Repositories
 {
     public interface IEventRepository : IRepository
     {
-        IQueryable<Event> GetAllAsync();
-        Task<Event> GetByIdAsync(int id);
-        Task UpdateAsync(Event entity);
-        Task RemoveAsync(int id);
-        Task AddAsync(Event entity);
+        RepositoryActionResult<IQueryable<Event>> GetAllAsync();
+        Task<RepositoryActionResult<Event>> GetByIdAsync(int id);
+        Task<RepositoryActionResult<Event>> UpdateAsync(Event entity);
+        Task<RepositoryActionResult<Event>> RemoveAsync(int id);
+        Task<RepositoryActionResult<Event>> AddAsync(Event entity);
     }
 }

@@ -14,33 +14,68 @@ namespace PredictionOfDelays.Infrastructure.Repositories
     {
         private readonly ApplicationDbContext _context = new ApplicationDbContext();
 
-        public IQueryable<Event> GetAllAsync()
-            => _context.Events.AsQueryable();
-
-        public async Task<Event> GetByIdAsync(int id)
-            => await _context.Events.FindAsync(id);
-
-        public async Task UpdateAsync(Event entity)
+        public RepositoryActionResult<IQueryable<Event>> GetAllAsync()
         {
-            _context.Entry(entity).State = EntityState.Modified;
-             await _context.SaveChangesAsync();
+            var events = _context.Events.AsQueryable();
+            return new RepositoryActionResult<IQueryable<Event>>(events, RepositoryStatus.Ok);
         }
 
-        public async Task RemoveAsync(int id)
+        public async Task<RepositoryActionResult<Event>> GetByIdAsync(int id)
         {
-            var e = await _context.Events.FindAsync(id);
-
-            if (e != null)
+            var @event = await _context.Events.FindAsync(id);
+            if (@event == null)
             {
-                _context.Events.Remove(e);
+                return new RepositoryActionResult<Event>(null, RepositoryStatus.NotFound);
+            }
+
+            return new RepositoryActionResult<Event>(@event, RepositoryStatus.Ok);
+        }
+            
+
+        public async Task<RepositoryActionResult<Event>> UpdateAsync(Event entity)
+        {
+            try
+            {
+                _context.Entry(entity).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
+                return new RepositoryActionResult<Event>(entity, RepositoryStatus.Updated);
+            }
+            catch (Exception)
+            {
+                return new RepositoryActionResult<Event>(entity,RepositoryStatus.Error);
             }
         }
 
-        public async Task AddAsync(Event entity)
+        public async Task<RepositoryActionResult<Event>> RemoveAsync(int id)
         {
-            _context.Events.Add(entity);
-            await _context.SaveChangesAsync();
+            var e = await _context.Events.FindAsync(id);
+            if (e == null)
+                return new RepositoryActionResult<Event>(null, RepositoryStatus.NotFound);
+
+            try
+            {
+                _context.Events.Remove(e);
+                await _context.SaveChangesAsync();
+                return new RepositoryActionResult<Event>(e, RepositoryStatus.Deleted);
+            }
+            catch (Exception)
+            {
+                return new RepositoryActionResult<Event>(e, RepositoryStatus.Error);
+            }
+        }
+
+        public async Task<RepositoryActionResult<Event>> AddAsync(Event entity)
+        {
+            try
+            {
+                _context.Events.Add(entity);
+                await _context.SaveChangesAsync();
+                return new RepositoryActionResult<Event>(entity, RepositoryStatus.Created);
+            }
+            catch (Exception)
+            {
+                return new RepositoryActionResult<Event>(entity, RepositoryStatus.Error);
+            }
         }
     }
 }
