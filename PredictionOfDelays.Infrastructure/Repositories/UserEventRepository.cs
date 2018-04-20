@@ -71,19 +71,5 @@ namespace PredictionOfDelays.Infrastructure.Repositories
             return new RepositoryActionResult<IQueryable<ApplicationUser>>(attendees, RepositoryStatus.Ok);
 
         }
-
-        public async Task<RepositoryActionResult<int>> GetAmountOfAttendeesAsync(int eventId)
-        {
-            var @event = await _context.Events.FirstOrDefaultAsync(e => e.EventId == eventId);
-
-            if (@event == null)
-            {
-                return new RepositoryActionResult<int>(0, RepositoryStatus.NotFound);
-            }
-
-            var amountOfAttendees = _context.UserEvents.Count(ue => ue.EventId == eventId);
-
-            return new RepositoryActionResult<int>(amountOfAttendees, RepositoryStatus.Ok);
-        }
     }
 }

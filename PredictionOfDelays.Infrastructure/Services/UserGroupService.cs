@@ -64,20 +64,5 @@ namespace PredictionOfDelays.Infrastructure.Services
             }
             throw new ServiceException(ErrorCodes.DatabaseError);
         }
-
-        public async Task<int> GetAmountOfMembers(int eventId)
-        {
-            var result = await _userGroupRepository.GetAmountOfMembersAsync(eventId);
-
-            if (result.Status == RepositoryStatus.Ok)
-            {
-                return result.Entity;
-            }
-            if (result.Status == RepositoryStatus.NotFound)
-            {
-                throw new ServiceException(ErrorCodes.EntityNotFound);
-            }
-            throw new ServiceException(ErrorCodes.DatabaseError);
-        }
     }
 }

@@ -103,10 +103,6 @@
     <Compile Include="Migrations\201804051433298_Localizationv2.Designer.cs">
       <DependentUpon>201804051433298_Localizationv2.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201804112217421_Rename.cs" />
-    <Compile Include="Migrations\201804112217421_Rename.Designer.cs">
-      <DependentUpon>201804112217421_Rename.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -141,9 +137,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201804051433298_Localizationv2.resx">
       <DependentUpon>201804051433298_Localizationv2.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201804112217421_Rename.resx">
-      <DependentUpon>201804112217421_Rename.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

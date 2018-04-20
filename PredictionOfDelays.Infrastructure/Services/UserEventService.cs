@@ -63,20 +63,5 @@ namespace PredictionOfDelays.Infrastructure.Services
             }
             throw new ServiceException(ErrorCodes.DatabaseError);
         }
-
-        public async Task<int> GetAmountOfAttendees(int eventId)
-        {
-            var result = await _userEventRepository.GetAmountOfAttendeesAsync(eventId);
-
-            if (result.Status == RepositoryStatus.Ok)
-            {
-                return result.Entity;
-            }
-            if (result.Status == RepositoryStatus.NotFound)
-            {
-                throw new ServiceException(ErrorCodes.EntityNotFound);
-            }
-            throw new ServiceException(ErrorCodes.DatabaseError);
-        }
     }
 }

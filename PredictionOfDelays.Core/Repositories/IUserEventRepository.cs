@@ -10,6 +10,5 @@ namespace PredictionOfDelays.Core.Repositories
         Task<RepositoryActionResult<UserEvent>> AddAsync(UserEvent userEvent);
         Task<RepositoryActionResult<UserEvent>> RemoveAsync(UserEvent userEvent);
         Task<RepositoryActionResult<IQueryable<ApplicationUser>>> GetAttendeesAsync(int eventId);
-        Task<RepositoryActionResult<int>> GetAmountOfAttendeesAsync(int eventId);
     }
 }

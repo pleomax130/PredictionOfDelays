@@ -15,13 +15,13 @@ namespace PredictionOfDelays.Infrastructure.Repositories
 
         public RepositoryActionResult<IQueryable<Group>> GetAllAsync()
         { 
-            var groups =_context.Groups.Include("Owner").AsQueryable();
+            var groups =_context.Groups.AsQueryable();
             return new RepositoryActionResult<IQueryable<Group>>(groups, RepositoryStatus.Ok);
         }
 
         public async Task<RepositoryActionResult<Group>> GetByIdAsync(int id)
         {
-            var group = await _context.Groups.Include("Owner").FirstOrDefaultAsync(g=>g.GroupId == id);
+            var group = await _context.Groups.FindAsync(id);
             if (group == null)
                 return new RepositoryActionResult<Group>(null, RepositoryStatus.NotFound);
 
