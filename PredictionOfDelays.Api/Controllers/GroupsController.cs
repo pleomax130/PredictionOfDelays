@@ -60,7 +60,7 @@ namespace PredictionOfDelays.Api.Controllers
             {
                 return BadRequest(ModelState);
             }
-            group.OwnerUserId = User.Identity.GetUserId();
+            group.Owner.Id = User.Identity.GetUserId();
             var result = await _groupService.AddAsync(group);
             return Created(Url.Request.RequestUri + "/" + result.GroupId, result);
         }

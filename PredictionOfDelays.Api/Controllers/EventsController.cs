@@ -60,7 +60,7 @@ namespace PredictionOfDelays.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            @event.OwnerUserId = User.Identity.GetUserId();
+            @event.Owner.Id = User.Identity.GetUserId();
             var result = await _eventService.AddAsync(@event);
             return Created(Url.Request.RequestUri+"/"+result.EventId, result);
         }

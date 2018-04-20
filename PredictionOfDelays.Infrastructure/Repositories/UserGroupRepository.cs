@@ -71,5 +71,19 @@ namespace PredictionOfDelays.Infrastructure.Repositories
 
             return new RepositoryActionResult<IQueryable<ApplicationUser>>(attendees, RepositoryStatus.Ok);
         }
+
+        public async Task<RepositoryActionResult<int>> GetAmountOfMembersAsync(int groupId)
+        {
+            var group = await _context.Groups.FirstOrDefaultAsync(e => e.GroupId == groupId);
+
+            if (group == null)
+            {
+                return new RepositoryActionResult<int>(0, RepositoryStatus.NotFound);
+            }
+
+            var amountOfMembers = _context.UserGroups.Count(ug => ug.GroupId == groupId);
+
+            return new RepositoryActionResult<int>(amountOfMembers, RepositoryStatus.Ok);
+        }
     }
 }

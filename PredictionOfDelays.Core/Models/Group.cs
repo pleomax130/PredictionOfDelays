@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Security.AccessControl;
 using System.Text;
@@ -11,7 +12,8 @@ namespace PredictionOfDelays.Core.Models
     public class Group : IEntity
     {
         public int GroupId { get; set; }
-        public string OwnerUserId { get; set; }
+        public string OwnerId { get; set; }
+        public ApplicationUser Owner { get; set; }
         [Required]
         [MaxLength(40), MinLength(5)]
         public string Name { get; set; }
@@ -19,7 +21,8 @@ namespace PredictionOfDelays.Core.Models
         [MaxLength(250)]
         public string Description { get; set; }
         public ICollection<UserGroup> Users { get; set; }
-
+       // [NotMapped]
+        //public int AmountOfAttendees { get; set; }
         public Group()
         {
             Users = new List<UserGroup>();

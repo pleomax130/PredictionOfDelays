@@ -9,7 +9,7 @@ namespace PredictionOfDelays.Infrastructure.DTO
     public class EventDto
     {
         public int EventId { get; set; }
-        public string OwnerUserId { get; set; }
+        public ApplicationUserDto Owner { get; set; }
         [Required]
         public LocalizationDto Localization { get; set; }
         [Required]
@@ -24,5 +24,6 @@ namespace PredictionOfDelays.Infrastructure.DTO
         [MaxLength(250)]
         public string Description { get; set; }
         public List<ApplicationUserDto> Users { get; set; }
+        public int AmountOfMembers { get; set; }
     }
 }
