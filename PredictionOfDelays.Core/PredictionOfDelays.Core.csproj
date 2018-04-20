@@ -103,6 +103,10 @@
     <Compile Include="Migrations\201804051433298_Localizationv2.Designer.cs">
       <DependentUpon>201804051433298_Localizationv2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201804202150165_FirstAndLastNameProperties.cs" />
+    <Compile Include="Migrations\201804202150165_FirstAndLastNameProperties.Designer.cs">
+      <DependentUpon>201804202150165_FirstAndLastNameProperties.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -137,6 +141,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201804051433298_Localizationv2.resx">
       <DependentUpon>201804051433298_Localizationv2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201804202150165_FirstAndLastNameProperties.resx">
+      <DependentUpon>201804202150165_FirstAndLastNameProperties.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
