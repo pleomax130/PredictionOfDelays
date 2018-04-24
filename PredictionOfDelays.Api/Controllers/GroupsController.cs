@@ -60,8 +60,10 @@ namespace PredictionOfDelays.Api.Controllers
             {
                 return BadRequest(ModelState);
             }
-            group.OwnerUserId = User.Identity.GetUserId();
+            var userId = User.Identity.GetUserId();
+            group.OwnerUserId = userId;
             var result = await _groupService.AddAsync(group);
+            await _userGroupService.AddAsync(userId, result.GroupId);
             return Created(Url.Request.RequestUri + "/" + result.GroupId, result);
         }
 

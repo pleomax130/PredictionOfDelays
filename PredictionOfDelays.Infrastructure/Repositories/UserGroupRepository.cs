@@ -16,7 +16,6 @@ namespace PredictionOfDelays.Infrastructure.Repositories
         {
             var group = await _context.Groups.FirstOrDefaultAsync(g => g.GroupId == userGroup.GroupId);
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userGroup.ApplicationUserId);
-            var userIds =  _context.Users.Select(u => u.Id).ToList();
 
             if (group == null || user == null)
             {

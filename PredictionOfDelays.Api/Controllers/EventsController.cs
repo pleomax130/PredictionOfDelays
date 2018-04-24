@@ -62,6 +62,7 @@ namespace PredictionOfDelays.Api.Controllers
 
             @event.OwnerUserId = User.Identity.GetUserId();
             var result = await _eventService.AddAsync(@event);
+            await _userEventService.AddAsync(User.Identity.GetUserId(), result.EventId);
             return Created(Url.Request.RequestUri+"/"+result.EventId, result);
         }
 
