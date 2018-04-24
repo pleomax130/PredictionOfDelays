@@ -63,5 +63,13 @@ namespace PredictionOfDelays.Infrastructure.Services
             }
             throw new ServiceException(ErrorCodes.DatabaseError);
         }
+
+        public async Task<List<EventDto>> GetEventsAsync(string userId)
+        {
+            var result = _userEventRepository.GetEvents(userId);
+            var events = await result.Entity.ToListAsync();
+
+            return _mapper.Map<ICollection<Event>, List<EventDto>>(events);
+        }
     }
 }

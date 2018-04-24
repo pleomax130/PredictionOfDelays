@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -63,6 +64,14 @@ namespace PredictionOfDelays.Infrastructure.Services
                 throw new ServiceException(ErrorCodes.EntityNotFound);
             }
             throw new ServiceException(ErrorCodes.DatabaseError);
+        }
+
+        public async Task<List<GroupDto>> GetGroupsAsync(string userId)
+        {
+            var result = _userGroupRepository.GetGroups(userId);
+            var groups = await result.Entity.ToListAsync();
+
+            return _mapper.Map<ICollection<Group>, List<GroupDto>>(groups);
         }
     }
 }

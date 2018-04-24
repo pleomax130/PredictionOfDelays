@@ -10,5 +10,6 @@ namespace PredictionOfDelays.Core.Repositories
         Task<RepositoryActionResult<UserGroup>> AddAsync(UserGroup userGroup);
         Task<RepositoryActionResult<UserGroup>> RemoveAsync(UserGroup userGroup);
         Task<RepositoryActionResult<IQueryable<ApplicationUser>>> GetMembersAsync(int groupId);
+        RepositoryActionResult<IQueryable<Group>> GetGroups(string userId);
     }
 }

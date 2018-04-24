@@ -71,5 +71,13 @@ namespace PredictionOfDelays.Infrastructure.Repositories
             return new RepositoryActionResult<IQueryable<ApplicationUser>>(attendees, RepositoryStatus.Ok);
 
         }
+
+        public RepositoryActionResult<IQueryable<Event>> GetEvents(string userId)
+        {
+            var events = _context.UserEvents.Include("Event").Where(ug => ug.ApplicationUserId == userId)
+                .Select(u => u.Event);
+
+            return new RepositoryActionResult<IQueryable<Event>>(events, RepositoryStatus.Ok);
+        }
     }
 }

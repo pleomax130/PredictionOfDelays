@@ -16,6 +16,7 @@ using Microsoft.Owin.Security.OAuth;
 using PredictionOfDelays.Api.Providers;
 using PredictionOfDelays.Api.Results;
 using PredictionOfDelays.Core.Models;
+using PredictionOfDelays.Infrastructure.Services;
 
 namespace PredictionOfDelays.Api.Controllers
 {
@@ -25,16 +26,22 @@ namespace PredictionOfDelays.Api.Controllers
     {
         private const string LocalLoginProvider = "Local";
         private ApplicationUserManager _userManager;
+        private IUserGroupService _userGroupService;
+        private IUserEventService _userEventService;
 
-        public AccountController()
+        public AccountController(IUserGroupService userGroupService, IUserEventService userEventService)
         {
+            _userGroupService = userGroupService;
+            _userEventService = userEventService;
         }
 
         public AccountController(ApplicationUserManager userManager,
-            ISecureDataFormat<AuthenticationTicket> accessTokenFormat)
+            ISecureDataFormat<AuthenticationTicket> accessTokenFormat, IUserGroupService userGroupService, IUserEventService userEventService)
         {
             UserManager = userManager;
             AccessTokenFormat = accessTokenFormat;
+            _userGroupService = userGroupService;
+            _userEventService = userEventService;
         }
 
         public ApplicationUserManager UserManager
@@ -374,6 +381,25 @@ namespace PredictionOfDelays.Api.Controllers
             return Ok();
         }
 
+        [HttpGet]
+        [Route("groups", Name = "groups")]
+        public async Task<IHttpActionResult> GetAllGroups()
+        {
+            var userId = User.Identity.GetUserId();
+            var groups = await _userGroupService.GetGroupsAsync(userId);
+            return Ok(groups);
+        }
+
+
+        [HttpGet]
+        [Route("events", Name = "events")]
+        public async Task<IHttpActionResult> GetAllEvents()
+        {
+            var userId = User.Identity.GetUserId();
+            var events = await _userEventService.GetEventsAsync(userId);
+            return Ok(events);
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing && _userManager != null)
@@ -384,7 +410,6 @@ namespace PredictionOfDelays.Api.Controllers
 
             base.Dispose(disposing);
         }
-
         #region Helpers
 
         private IAuthenticationManager Authentication
