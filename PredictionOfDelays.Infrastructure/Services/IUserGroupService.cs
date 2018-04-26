@@ -9,6 +9,7 @@ namespace PredictionOfDelays.Infrastructure.Services
     {
         Task AddAsync(string userId, int groupId);
         Task RemoveAsync(string userId, int groupId);
+        Task InviteAsync(string userId, int groupId);
         Task<List<ApplicationUserDto>> GetMembersAsync(int groupId);
         Task<List<GroupDto>> GetGroupsAsync(string userId);
     }

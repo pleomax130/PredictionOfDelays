@@ -24,7 +24,8 @@ namespace PredictionOfDelays.Infrastructure.Services
 
         public async Task AddAsync(string userId, int groupId)
         {
-            var result = await _userGroupRepository.AddAsync(new UserGroup {ApplicationUserId = userId, GroupId = groupId});
+            var result =
+                await _userGroupRepository.AddAsync(new UserGroup {ApplicationUserId = userId, GroupId = groupId});
 
             if (result.Status == RepositoryStatus.NotFound)
             {
@@ -40,6 +41,24 @@ namespace PredictionOfDelays.Infrastructure.Services
         {
             var result =
                 await _userGroupRepository.RemoveAsync(new UserGroup {ApplicationUserId = userId, GroupId = groupId});
+            if (result.Status == RepositoryStatus.NotFound)
+            {
+                throw new ServiceException(ErrorCodes.EntityNotFound);
+            }
+            if (result.Status == RepositoryStatus.Error)
+            {
+                throw new ServiceException(ErrorCodes.DatabaseError);
+            }
+        }
+
+        public async Task InviteAsync(string userId, int groupId)
+        {
+            var result =
+                await _userGroupRepository.InviteAsync(new UserGroupInvite
+                {
+                    ApplicationUserId = userId,
+                    GroupId = groupId
+                });
             if (result.Status == RepositoryStatus.NotFound)
             {
                 throw new ServiceException(ErrorCodes.EntityNotFound);

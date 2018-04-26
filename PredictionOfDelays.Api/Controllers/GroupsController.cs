@@ -107,6 +107,26 @@ namespace PredictionOfDelays.Api.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("{groupId}/invites")]
+        public async Task<IHttpActionResult> Invite(int groupId, [FromBody]ApplicationUserDto user)
+        {
+            try
+            {
+                var userId = user.Id;
+                await _userGroupService.InviteAsync(userId, groupId);
+                return Ok();
+            }
+            catch (ServiceException e)
+            {
+                if (e.Code == ErrorCodes.BadRequest)
+                {
+                    return BadRequest();
+                }
+                return InternalServerError();
+            }
+        }
+
         [HttpDelete]
         [Route("{groupId}/members")]
         public async Task<IHttpActionResult> Resign(int groupId)

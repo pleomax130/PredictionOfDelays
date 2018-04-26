@@ -16,13 +16,13 @@ namespace PredictionOfDelays.Infrastructure.Repositories
 
         public RepositoryActionResult<IQueryable<Event>> GetAllAsync()
         {
-            var events = _context.Events.AsQueryable();
+            var events = _context.Events.Include("Localization").AsQueryable();
             return new RepositoryActionResult<IQueryable<Event>>(events, RepositoryStatus.Ok);
         }
 
         public async Task<RepositoryActionResult<Event>> GetByIdAsync(int id)
         {
-            var @event = await _context.Events.FindAsync(id);
+            var @event = await _context.Events.Include("Localization").FirstOrDefaultAsync(x=> x.EventId == id);
             if (@event == null)
             {
                 return new RepositoryActionResult<Event>(null, RepositoryStatus.NotFound);

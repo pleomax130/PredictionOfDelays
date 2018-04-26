@@ -33,6 +33,30 @@ namespace PredictionOfDelays.Infrastructure.Repositories
                 return new RepositoryActionResult<UserGroup>(userGroup, RepositoryStatus.Error);
             }
         }
+        
+        public async Task<RepositoryActionResult<UserGroupInvite>> InviteAsync(UserGroupInvite userGroupInvite)
+        {
+            var group = await _context.Groups.FirstOrDefaultAsync(g => g.GroupId == userGroupInvite.GroupId);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userGroupInvite.ApplicationUserId);
+
+
+            if (group == null || user == null)
+            {
+                return new RepositoryActionResult<UserGroupInvite>(userGroupInvite, RepositoryStatus.NotFound);
+            }
+
+            try
+            {
+                _context.UserGroupsInvites.Add(userGroupInvite);
+                await _context.SaveChangesAsync();
+                return new RepositoryActionResult<UserGroupInvite>(userGroupInvite, RepositoryStatus.Created);
+            }
+            catch (Exception exception)
+            {
+                return new RepositoryActionResult<UserGroupInvite>(userGroupInvite, RepositoryStatus.Error);
+            }
+
+        }
 
         public async Task<RepositoryActionResult<UserGroup>> RemoveAsync(UserGroup userGroup)
         {
