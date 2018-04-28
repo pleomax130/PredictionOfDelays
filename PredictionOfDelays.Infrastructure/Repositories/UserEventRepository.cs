@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using PredictionOfDelays.Core.Models;
@@ -78,6 +79,29 @@ namespace PredictionOfDelays.Infrastructure.Repositories
                 .Select(u => u.Event);
 
             return new RepositoryActionResult<IQueryable<Event>>(events, RepositoryStatus.Ok);
+        }
+
+        public async Task<RepositoryActionResult<EventInvite>> AddInviteAsync(EventInvite invite)
+        {
+            var sender = await _context.Users.FirstOrDefaultAsync(u => u.Id == invite.SenderId);
+            var invited = await _context.Users.FirstOrDefaultAsync(u => u.Id == invite.InvitedId);
+            var @event = await _context.Events.FirstOrDefaultAsync(e => e.EventId == invite.EventId);
+            if (sender == null || invited == null || @event == null)
+            {
+                return new RepositoryActionResult<EventInvite>(invite, RepositoryStatus.NotFound);
+            }
+
+            try
+            {
+                invite.EventInviteId = Guid.NewGuid();
+                var result = _context.EventInvites.Add(invite);
+                await _context.SaveChangesAsync();
+                return new RepositoryActionResult<EventInvite>(result, RepositoryStatus.Created);
+            }
+            catch (Exception e)
+            {
+                return new RepositoryActionResult<EventInvite>(invite, RepositoryStatus.Error);
+            }
         }
     }
 }

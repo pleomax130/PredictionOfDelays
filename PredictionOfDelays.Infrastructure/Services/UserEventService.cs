@@ -71,5 +71,24 @@ namespace PredictionOfDelays.Infrastructure.Services
 
             return _mapper.Map<ICollection<Event>, List<EventDto>>(events);
         }
+
+        public async Task<EventInvite> AddInviteAsync(string senderId, string invitedId, int eventId)
+        {
+            var result = await _userEventRepository.AddInviteAsync(new EventInvite()
+            {
+                SenderId = senderId,
+                InvitedId = invitedId,
+                EventId = eventId
+            });
+            if (result.Status == RepositoryStatus.Created)
+            {
+                return result.Entity;
+            }
+            if (result.Status == RepositoryStatus.NotFound)
+            {
+                throw new ServiceException(ErrorCodes.BadRequest);
+            }
+            throw new ServiceException(ErrorCodes.DatabaseError);
+        }
     }
 }

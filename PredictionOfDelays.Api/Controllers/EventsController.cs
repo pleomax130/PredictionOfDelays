@@ -126,5 +126,27 @@ namespace PredictionOfDelays.Api.Controllers
                 return InternalServerError();
             }
         }
+
+        [HttpPost]
+        [Route("{eventId}/invites")]
+        public async Task<IHttpActionResult> Invite(int eventId, [FromBody]ApplicationUserDto invitedApplicationUserDto)
+        {
+            try
+            {
+                var senderId = User.Identity.GetUserId();
+                var result = await _userEventService.AddInviteAsync(senderId, invitedApplicationUserDto.Id, eventId);
+                return Ok(result);
+            }
+            catch (ServiceException e)
+            {
+                if (e.Code == ErrorCodes.BadRequest)
+                {
+                    return BadRequest();
+                }
+                return InternalServerError(e);
+            }
+        }
+
+        //TODO enable querying specific invites
     }
 }
