@@ -24,9 +24,13 @@ namespace PredictionOfDelays.Core.Models
         [Required]
         public Localization Localization { get; set; }
 
+        public ICollection<EventInvite> EventInvites { get; set; }
+
         public Event()
         {
            Users = new List<UserEvent>();
+           EventInvites = new List<EventInvite>();
+        
         }
 
         
