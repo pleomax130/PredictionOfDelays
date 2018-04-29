@@ -134,8 +134,8 @@ namespace PredictionOfDelays.Api.Controllers
             try
             {
                 var senderId = User.Identity.GetUserId();
-                var result = await _userEventService.AddInviteAsync(senderId, invitedApplicationUserDto.Id, eventId);
-                return Ok(result);
+                await _userEventService.AddInviteAsync(senderId, invitedApplicationUserDto.Id, eventId);
+                return Ok();
             }
             catch (ServiceException e)
             {
@@ -143,10 +143,52 @@ namespace PredictionOfDelays.Api.Controllers
                 {
                     return BadRequest();
                 }
-                return InternalServerError(e);
+                if(e.Code == ErrorCodes.EntityNotFound)
+                {
+                    return NotFound();
+                }
+                return InternalServerError();
             }
         }
 
-        //TODO enable querying specific invites
+        [HttpPost]
+        [Route("{eventId}/invites/{inviteId}")]
+        public async Task<IHttpActionResult> Accept(int eventId, Guid inviteId)
+        {
+            try
+            {
+                var userId = User.Identity.GetUserId();
+                await _userEventService.AcceptInvitationAsync(inviteId, userId);
+                return Ok();
+            }
+            catch (ServiceException e)
+            {
+                if (e.Code == ErrorCodes.EntityNotFound)
+                {
+                    return NotFound();
+                }
+                return InternalServerError();
+            }
+        }
+
+        [HttpDelete]
+        [Route("{eventId}/invites/{inviteId}")]
+        public async Task<IHttpActionResult> Reject(int eventId, Guid inviteId)
+        {
+            try
+            {
+                var userId = User.Identity.GetUserId();
+                await _userEventService.RejectInvitationAsync(inviteId, userId);
+                return StatusCode(HttpStatusCode.NoContent);
+            }
+            catch (ServiceException e)
+            {
+                if (e.Code == ErrorCodes.EntityNotFound)
+                {
+                    return NotFound();
+                }
+                return InternalServerError();
+            }
+        }
     }
 }

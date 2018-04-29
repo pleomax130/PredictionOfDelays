@@ -72,7 +72,7 @@ namespace PredictionOfDelays.Infrastructure.Services
             return _mapper.Map<ICollection<Event>, List<EventDto>>(events);
         }
 
-        public async Task<EventInvite> AddInviteAsync(string senderId, string invitedId, int eventId)
+        public async Task AddInviteAsync(string senderId, string invitedId, int eventId)
         {
             var result = await _userEventRepository.AddInviteAsync(new EventInvite()
             {
@@ -80,15 +80,45 @@ namespace PredictionOfDelays.Infrastructure.Services
                 InvitedId = invitedId,
                 EventId = eventId
             });
-            if (result.Status == RepositoryStatus.Created)
+
+            switch (result.Status)
             {
-                return result.Entity;
+                case RepositoryStatus.Created:
+                    return;
+                case RepositoryStatus.NotFound:
+                    throw new ServiceException(ErrorCodes.EntityNotFound);
+                case RepositoryStatus.BadRequest:
+                    throw new ServiceException(ErrorCodes.BadRequest);
+                default: throw new ServiceException(ErrorCodes.DatabaseError);
             }
-            if (result.Status == RepositoryStatus.NotFound)
+        }
+
+        public async Task AcceptInvitationAsync(Guid inviteId, string receiverId)
+        {
+            var result = await _userEventRepository.AcceptInvitationAsync(inviteId, receiverId);
+
+            switch (result.Status)
             {
-                throw new ServiceException(ErrorCodes.BadRequest);
+                case RepositoryStatus.Created:
+                    return;
+                case RepositoryStatus.NotFound:
+                    throw new ServiceException(ErrorCodes.EntityNotFound);
+                default: throw new ServiceException(ErrorCodes.DatabaseError);
             }
-            throw new ServiceException(ErrorCodes.DatabaseError);
+        }
+
+        public async Task RejectInvitationAsync(Guid inviteId, string receiverId)
+        {
+            var result = await _userEventRepository.RejectInvitationAsync(inviteId, receiverId);
+
+            switch (result.Status)
+            {
+                case RepositoryStatus.Deleted:
+                    return;
+                case RepositoryStatus.NotFound:
+                    throw new ServiceException(ErrorCodes.EntityNotFound);
+                default: throw new ServiceException(ErrorCodes.DatabaseError);
+            }
         }
     }
 }

@@ -91,6 +91,14 @@ namespace PredictionOfDelays.Infrastructure.Repositories
                 return new RepositoryActionResult<EventInvite>(invite, RepositoryStatus.NotFound);
             }
 
+            var existingInvite = await _context.EventInvites.FirstOrDefaultAsync(
+                i => i.EventId == invite.EventId && i.InvitedId == invite.InvitedId);
+
+            if (existingInvite != null)
+            {
+                return new RepositoryActionResult<EventInvite>(existingInvite, RepositoryStatus.BadRequest);
+            }
+
             try
             {
                 invite.EventInviteId = Guid.NewGuid();
@@ -101,6 +109,57 @@ namespace PredictionOfDelays.Infrastructure.Repositories
             catch (Exception e)
             {
                 return new RepositoryActionResult<EventInvite>(invite, RepositoryStatus.Error);
+            }
+        }
+
+        public async Task<RepositoryActionResult<UserEvent>> AcceptInvitationAsync(Guid inviteId, string receiverId)
+        {
+            var eventInvite = await _context.EventInvites.FirstOrDefaultAsync(
+                i => i.EventInviteId == inviteId && i.InvitedId == receiverId);
+
+            if (eventInvite == null)
+            {
+                return new RepositoryActionResult<UserEvent>(null, RepositoryStatus.NotFound);
+            }
+            try
+            {
+                var entity = _context.UserEvents.Add(new UserEvent()
+                {
+                    ApplicationUserId = eventInvite.InvitedId,
+                    EventId = eventInvite.EventId
+                });
+
+                //Clean invites
+                _context.EventInvites.Remove(eventInvite);
+
+                await _context.SaveChangesAsync();
+                return new RepositoryActionResult<UserEvent>(entity, RepositoryStatus.Created);
+            }
+            catch (Exception)
+            {
+                return new RepositoryActionResult<UserEvent>(null, RepositoryStatus.Error);
+            }
+        }
+
+        public async Task<RepositoryActionResult<EventInvite>> RejectInvitationAsync(Guid inviteId, string receiverId)
+        {
+            var eventInvite = await _context.EventInvites.FirstOrDefaultAsync(
+                i => i.EventInviteId == inviteId && i.InvitedId == receiverId);
+
+            if (eventInvite == null)
+            {
+                return new RepositoryActionResult<EventInvite>(null, RepositoryStatus.NotFound);
+            }
+            try
+            {
+                _context.EventInvites.Remove(eventInvite);
+
+                await _context.SaveChangesAsync();
+                return new RepositoryActionResult<EventInvite>(null, RepositoryStatus.Deleted);
+            }
+            catch (Exception)
+            {
+                return new RepositoryActionResult<EventInvite>(null, RepositoryStatus.Error);
             }
         }
     }

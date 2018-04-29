@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using PredictionOfDelays.Core.Models;
 using PredictionOfDelays.Infrastructure.DTO;
@@ -11,7 +12,9 @@ namespace PredictionOfDelays.Infrastructure.Services
         Task RemoveAsync(string userId, int eventId);
         Task<List<ApplicationUserDto>> GetAttendeesAsync(int eventId);
         Task<List<EventDto>> GetEventsAsync(string userId);
-        Task<EventInvite> AddInviteAsync(string senderId, string invitedId, int eventId);
+        Task AddInviteAsync(string senderId, string invitedId, int eventId);
+        Task AcceptInvitationAsync(Guid inviteId, string receiverId);
+        Task RejectInvitationAsync(Guid inviteId, string receiverId);
 
     }
 }
