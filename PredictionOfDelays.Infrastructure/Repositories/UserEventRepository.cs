@@ -112,6 +112,11 @@ namespace PredictionOfDelays.Infrastructure.Repositories
             }
         }
 
+        public Task<RepositoryActionResult<EventInvite>> AddInviteGroupAsync(EventInvite invite)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<RepositoryActionResult<UserEvent>> AcceptInvitationAsync(Guid inviteId, string receiverId)
         {
             var eventInvite = await _context.EventInvites.FirstOrDefaultAsync(

@@ -51,24 +51,6 @@ namespace PredictionOfDelays.Infrastructure.Services
             }
         }
 
-        public async Task InviteAsync(string userId, int groupId)
-        {
-            var result =
-                await _userGroupRepository.InviteAsync(new UserGroupInvite
-                {
-                    ApplicationUserId = userId,
-                    GroupId = groupId
-                });
-            if (result.Status == RepositoryStatus.NotFound)
-            {
-                throw new ServiceException(ErrorCodes.EntityNotFound);
-            }
-            if (result.Status == RepositoryStatus.Error)
-            {
-                throw new ServiceException(ErrorCodes.DatabaseError);
-            }
-        }
-
         public async Task<List<ApplicationUserDto>> GetMembersAsync(int groupId)
         {
             var result = await _userGroupRepository.GetMembersAsync(groupId);
@@ -91,6 +73,55 @@ namespace PredictionOfDelays.Infrastructure.Services
             var groups = await result.Entity.ToListAsync();
 
             return _mapper.Map<ICollection<Group>, List<GroupDto>>(groups);
+        }
+
+        public async Task AddInviteAsync(string senderId, string invitedId, int groupId)
+        {
+            var result = await _userGroupRepository.AddInviteAsync(new GroupInvite()
+            {
+                SenderId = senderId,
+                InvitedId = invitedId,
+                GroupId = groupId
+            });
+
+            switch (result.Status)
+            {
+                case RepositoryStatus.Created:
+                    return;
+                case RepositoryStatus.NotFound:
+                    throw new ServiceException(ErrorCodes.EntityNotFound);
+                case RepositoryStatus.BadRequest:
+                    throw new ServiceException(ErrorCodes.BadRequest);
+                default: throw new ServiceException(ErrorCodes.DatabaseError);
+            }
+        }
+
+        public async Task AcceptInvitationAsync(Guid inviteId, string receiverId)
+        {
+            var result = await _userGroupRepository.AcceptInvitationAsync(inviteId, receiverId);
+
+            switch (result.Status)
+            {
+                case RepositoryStatus.Created:
+                    return;
+                case RepositoryStatus.NotFound:
+                    throw new ServiceException(ErrorCodes.EntityNotFound);
+                default: throw new ServiceException(ErrorCodes.DatabaseError);
+            }
+        }
+
+        public async Task RejectInvitationAsync(Guid inviteId, string receiverId)
+        {
+            var result = await _userGroupRepository.RejectInvitationAsync(inviteId, receiverId);
+
+            switch (result.Status)
+            {
+                case RepositoryStatus.Deleted:
+                    return;
+                case RepositoryStatus.NotFound:
+                    throw new ServiceException(ErrorCodes.EntityNotFound);
+                default: throw new ServiceException(ErrorCodes.DatabaseError);
+            }
         }
     }
 }

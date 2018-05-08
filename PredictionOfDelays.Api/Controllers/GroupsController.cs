@@ -107,26 +107,6 @@ namespace PredictionOfDelays.Api.Controllers
             }
         }
 
-        [HttpPost]
-        [Route("{groupId}/invites")]
-        public async Task<IHttpActionResult> Invite(int groupId, [FromBody]ApplicationUserDto user)
-        {
-            try
-            {
-                var userId = user.Id;
-                await _userGroupService.InviteAsync(userId, groupId);
-                return Ok();
-            }
-            catch (ServiceException e)
-            {
-                if (e.Code == ErrorCodes.BadRequest)
-                {
-                    return BadRequest();
-                }
-                return InternalServerError();
-            }
-        }
-
         [HttpDelete]
         [Route("{groupId}/members")]
         public async Task<IHttpActionResult> Resign(int groupId)
@@ -142,6 +122,92 @@ namespace PredictionOfDelays.Api.Controllers
                 if (e.Code == ErrorCodes.BadRequest)
                 {
                     return BadRequest();
+                }
+                return InternalServerError();
+            }
+        }
+
+        [HttpDelete]
+        [Route("{groupId}/members/{userId}")]
+        public async Task<IHttpActionResult> Kick(int groupId, string userId)
+        {
+            try
+            {
+                var loggedUserId = User.Identity.GetUserId();
+                var group = await _groupService.GetByIdAsync(groupId);
+                if (!loggedUserId.Equals(group.OwnerUserId)) return StatusCode(HttpStatusCode.Unauthorized);
+                await _userGroupService.RemoveAsync(userId, groupId);
+                return StatusCode(HttpStatusCode.NoContent);
+            }
+            catch (ServiceException e)
+            {
+                if (e.Code == ErrorCodes.BadRequest)
+                {
+                    return BadRequest();
+                }
+                return InternalServerError();
+            }
+        }
+
+        [HttpPost]
+        [Route("{groupId}/invites")]
+        public async Task<IHttpActionResult> Invite(int groupId, [FromBody]ApplicationUserDto invitedApplicationUserDto)
+        {
+            try
+            {
+                var senderId = User.Identity.GetUserId();
+                await _userGroupService.AddInviteAsync(senderId, invitedApplicationUserDto.Id, groupId);
+                return Ok();
+            }
+            catch (ServiceException e)
+            {
+                if (e.Code == ErrorCodes.BadRequest)
+                {
+                    return BadRequest();
+                }
+                if (e.Code == ErrorCodes.EntityNotFound)
+                {
+                    return NotFound();
+                }
+                return InternalServerError();
+            }
+        }
+
+        [HttpPost]
+        [Route("{groupId}/invites/{inviteId}")]
+        public async Task<IHttpActionResult> Accept(int groupId, Guid inviteId)
+        {
+            try
+            {
+                var userId = User.Identity.GetUserId();
+                await _userGroupService.AcceptInvitationAsync(inviteId, userId);
+                return Ok();
+            }
+            catch (ServiceException e)
+            {
+                if (e.Code == ErrorCodes.EntityNotFound)
+                {
+                    return NotFound();
+                }
+                return InternalServerError();
+            }
+        }
+
+        [HttpDelete]
+        [Route("{groupId}/invites/{inviteId}")]
+        public async Task<IHttpActionResult> Reject(int groupId, Guid inviteId)
+        {
+            try
+            {
+                var userId = User.Identity.GetUserId();
+                await _userGroupService.RejectInvitationAsync(inviteId, userId);
+                return StatusCode(HttpStatusCode.NoContent);
+            }
+            catch (ServiceException e)
+            {
+                if (e.Code == ErrorCodes.EntityNotFound)
+                {
+                    return NotFound();
                 }
                 return InternalServerError();
             }

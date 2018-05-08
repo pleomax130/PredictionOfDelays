@@ -127,6 +127,28 @@ namespace PredictionOfDelays.Api.Controllers
             }
         }
 
+        [HttpDelete]
+        [Route("{eventId}/attendees/{userId}")]
+        public async Task<IHttpActionResult> Kick(int eventId, string userId)
+        {
+            try
+            {
+                var loggedUserId = User.Identity.GetUserId();
+                var @event = await _eventService.GetByIdAsync(eventId);
+                if (!loggedUserId.Equals(@event.OwnerUserId)) return StatusCode(HttpStatusCode.Unauthorized);
+                await _userEventService.RemoveAsync(userId, eventId);
+                return StatusCode(HttpStatusCode.NoContent);
+            }
+            catch (ServiceException e)
+            {
+                if (e.Code == ErrorCodes.BadRequest)
+                {
+                    return BadRequest();
+                }
+                return InternalServerError();
+            }
+        }
+
         [HttpPost]
         [Route("{eventId}/invites")]
         public async Task<IHttpActionResult> Invite(int eventId, [FromBody]ApplicationUserDto invitedApplicationUserDto)

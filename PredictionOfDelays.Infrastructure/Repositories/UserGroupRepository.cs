@@ -34,30 +34,6 @@ namespace PredictionOfDelays.Infrastructure.Repositories
             }
         }
         
-        public async Task<RepositoryActionResult<UserGroupInvite>> InviteAsync(UserGroupInvite userGroupInvite)
-        {
-            var group = await _context.Groups.FirstOrDefaultAsync(g => g.GroupId == userGroupInvite.GroupId);
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userGroupInvite.ApplicationUserId);
-
-
-            if (group == null || user == null)
-            {
-                return new RepositoryActionResult<UserGroupInvite>(userGroupInvite, RepositoryStatus.NotFound);
-            }
-
-            try
-            {
-                _context.UserGroupsInvites.Add(userGroupInvite);
-                await _context.SaveChangesAsync();
-                return new RepositoryActionResult<UserGroupInvite>(userGroupInvite, RepositoryStatus.Created);
-            }
-            catch (Exception exception)
-            {
-                return new RepositoryActionResult<UserGroupInvite>(userGroupInvite, RepositoryStatus.Error);
-            }
-
-        }
-
         public async Task<RepositoryActionResult<UserGroup>> RemoveAsync(UserGroup userGroup)
         {
             var ug = await _context.UserGroups.FirstOrDefaultAsync(usGr =>
@@ -101,6 +77,85 @@ namespace PredictionOfDelays.Infrastructure.Repositories
                 .Select(u => u.Group);
 
             return new RepositoryActionResult<IQueryable<Group>>(groups, RepositoryStatus.Ok);
+        }
+
+        public async Task<RepositoryActionResult<GroupInvite>> AddInviteAsync(GroupInvite invite)
+        {
+            var sender = await _context.Users.FirstOrDefaultAsync(u => u.Id == invite.SenderId);
+            var invited = await _context.Users.FirstOrDefaultAsync(u => u.Id == invite.InvitedId);
+            var group = await _context.Groups.FirstOrDefaultAsync(e => e.GroupId == invite.GroupId);
+            if (sender == null || invited == null || group == null)
+            {
+                return new RepositoryActionResult<GroupInvite>(invite, RepositoryStatus.NotFound);
+            }
+
+            var existingInvite = await _context.GroupInvites.FirstOrDefaultAsync(
+                i => i.GroupId == invite.GroupId && i.InvitedId == invite.InvitedId);
+
+            if (existingInvite != null)
+            {
+                return new RepositoryActionResult<GroupInvite>(existingInvite, RepositoryStatus.BadRequest);
+            }
+
+            try
+            {
+                invite.GroupInviteId = Guid.NewGuid();
+                var result = _context.GroupInvites.Add(invite);
+                await _context.SaveChangesAsync();
+                return new RepositoryActionResult<GroupInvite>(result, RepositoryStatus.Created);
+            }
+            catch (Exception e)
+            {
+                return new RepositoryActionResult<GroupInvite>(invite, RepositoryStatus.Error);
+            }
+        }
+
+        public async Task<RepositoryActionResult<UserGroup>> AcceptInvitationAsync(Guid inviteId, string receiverId)
+        {
+            var groupInvite = await _context.GroupInvites.FirstOrDefaultAsync(
+                i => i.GroupInviteId == inviteId && i.InvitedId == receiverId);
+
+            if (groupInvite == null)
+            {
+                return new RepositoryActionResult<UserGroup>(null, RepositoryStatus.NotFound);
+            }
+            try
+            {
+                var entity = _context.UserGroups.Add(new UserGroup()
+                {
+                    ApplicationUserId = groupInvite.InvitedId,
+                    GroupId = groupInvite.GroupId
+                });
+                _context.GroupInvites.Remove(groupInvite);
+                await _context.SaveChangesAsync();
+                return new RepositoryActionResult<UserGroup>(entity, RepositoryStatus.Created);
+            }
+            catch (Exception)
+            {
+                return new RepositoryActionResult<UserGroup>(null, RepositoryStatus.Error);
+            }
+        }
+
+        public async Task<RepositoryActionResult<GroupInvite>> RejectInvitationAsync(Guid inviteId, string receiverId)
+        {
+            var groupInvite = await _context.GroupInvites.FirstOrDefaultAsync(
+                i => i.GroupInviteId == inviteId && i.InvitedId == receiverId);
+
+            if (groupInvite == null)
+            {
+                return new RepositoryActionResult<GroupInvite>(null, RepositoryStatus.NotFound);
+            }
+            try
+            {
+                _context.GroupInvites.Remove(groupInvite);
+
+                await _context.SaveChangesAsync();
+                return new RepositoryActionResult<GroupInvite>(null, RepositoryStatus.Deleted);
+            }
+            catch (Exception)
+            {
+                return new RepositoryActionResult<GroupInvite>(null, RepositoryStatus.Error);
+            }
         }
     }
 }

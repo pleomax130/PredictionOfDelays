@@ -115,6 +115,10 @@
     <Compile Include="Migrations\201804282058225_AddEventInvites.Designer.cs">
       <DependentUpon>201804282058225_AddEventInvites.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201805081410569_GroupInvites1.cs" />
+    <Compile Include="Migrations\201805081410569_GroupInvites1.Designer.cs">
+      <DependentUpon>201805081410569_GroupInvites1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -122,6 +126,7 @@
     <Compile Include="Models\Event.cs" />
     <Compile Include="Models\EventInvite.cs" />
     <Compile Include="Models\Group.cs" />
+    <Compile Include="Models\GroupInvite.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\IEntity.cs" />
     <Compile Include="Models\Localization.cs" />
@@ -160,6 +165,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201804282058225_AddEventInvites.resx">
       <DependentUpon>201804282058225_AddEventInvites.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201805081410569_GroupInvites1.resx">
+      <DependentUpon>201805081410569_GroupInvites1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
