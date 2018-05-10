@@ -94,8 +94,13 @@
       <HintPath>..\packages\Purplelight.Framework.Autofac.Integration.WebApi.0.2.2\lib\net45\Purplelight.Framework.Autofac.Integration.WebApi.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="RazorEngine, Version=3.10.0.0, Culture=neutral, PublicKeyToken=9ee697374c7e744a, processorArchitecture=MSIL">
+      <HintPath>..\packages\RazorEngine.3.10.0\lib\net45\RazorEngine.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression.FileSystem" />
@@ -107,6 +112,10 @@
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web.Http, Version=5.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.0\lib\net45\System.Web.Http.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.0.0\lib\net45\System.Web.Razor.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Xml.Linq" />
@@ -121,7 +130,7 @@
     <Compile Include="DTO\EventDto.cs" />
     <Compile Include="DTO\GroupDto.cs" />
     <Compile Include="DTO\LocalizationDto.cs" />
-    <Compile Include="ErrorCodes.cs" />
+    <Compile Include="Services\ErrorCodes.cs" />
     <Compile Include="IoC\Modules\RepositoryModule.cs" />
     <Compile Include="IoC\Modules\ServiceModule.cs" />
     <Compile Include="Mappers\AutoMapperConfig.cs" />
@@ -130,7 +139,7 @@
     <Compile Include="Repositories\GroupRepository.cs" />
     <Compile Include="Repositories\UserEventRepository.cs" />
     <Compile Include="Repositories\UserGroupRepository.cs" />
-    <Compile Include="ServiceException.cs" />
+    <Compile Include="Services\ServiceException.cs" />
     <Compile Include="Services\EventService.cs" />
     <Compile Include="Services\GroupService.cs" />
     <Compile Include="Services\IEventService.cs" />
@@ -140,6 +149,8 @@
     <Compile Include="Services\IUserGroupService.cs" />
     <Compile Include="Services\UserEventService.cs" />
     <Compile Include="Services\UserGroupService.cs" />
+    <Compile Include="Utilities\InviteSender.cs" />
+    <Compile Include="Utilities\MessageGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PredictionOfDelays.Core\PredictionOfDelays.Core.csproj">
@@ -150,8 +161,8 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+    <None Include="Utilities\EventInvite.cshtml" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

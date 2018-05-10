@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using PredictionOfDelays.Core.Models;
 using PredictionOfDelays.Core.Repositories;
+using PredictionOfDelays.Infrastructure.Utilities;
 
 namespace PredictionOfDelays.Infrastructure.Repositories
 {
@@ -104,6 +105,7 @@ namespace PredictionOfDelays.Infrastructure.Repositories
                 invite.EventInviteId = Guid.NewGuid();
                 var result = _context.EventInvites.Add(invite);
                 await _context.SaveChangesAsync();
+                new InviteSender().SendEventInvite(invite);
                 return new RepositoryActionResult<EventInvite>(result, RepositoryStatus.Created);
             }
             catch (Exception e)
