@@ -4,20 +4,36 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using Autofac;
+using AutoMapper;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.SignalR;
 using NLog;
 using NLog.Fluent;
+using PredictionOfDelays.Core.Repositories;
 using PredictionOfDelays.Infrastructure.Repositories;
+using PredictionOfDelays.Infrastructure.Services;
+using WebGrease.Css.Extensions;
 
 namespace PredictionOfDelays.Api.Hubs
 {
     public class NotificationsHub : Hub
     {
-        private readonly UserEventService _userEventService = new UserEventService();
-        public void Hello()
+        private readonly IUserEventService _userEventService;
+
+        public NotificationsHub(IUserEventService userEventService)
         {
-            Clients.OthersInGroup("grupa").hello("hello");
+            _userEventService = userEventService;
+        }
+
+        public async Task Hello()
+        {
+            var userId = Context.User.Identity.GetUserId();
+            var events = await _userEventService.GetEventsAsync(userId);
+            foreach (var @event in events)
+            {
+                Clients.OthersInGroup(@event.Name).hello(@event.Name);
+            }
         }
 
         public void SendNotification(string groupName, string message)
@@ -27,38 +43,41 @@ namespace PredictionOfDelays.Api.Hubs
 
         public override async Task OnConnected()
         {
+            var userId = Context.User.Identity.GetUserId();
+            await _userEventService.AddConnectionId(userId, Context.ConnectionId);
+            var events = await _userEventService.GetEventsAsync(userId);
+            foreach (var e in events)
+            {
+                await Groups.Add(Context.ConnectionId, e.Name);
+            }
+
             await base.OnConnected();
-//            var userId = Context.User.Identity.GetUserId();
-            await Groups.Add(Context.ConnectionId, "grupa");
-//            var events = await _userEventService.GetEvents(userId).Entity.ToListAsync();
-//            foreach (var e in events)
-//            {
-//                await Groups.Add(Context.ConnectionId, e.Name);
-//            }
         }
 
         public override async Task OnReconnected()
         {
+            var userId = Context.User.Identity.GetUserId();
+            await _userEventService.AddConnectionId(userId, Context.ConnectionId);
+            var events = await _userEventService.GetEventsAsync(userId);
+            foreach (var e in events)
+            {
+                await Groups.Add(Context.ConnectionId, e.Name);
+            }
+
             await base.OnReconnected();
-//            var userId = Context.User.Identity.GetUserId();
-            await Groups.Add(Context.ConnectionId, "grupa");
-            //            var events = await _userEventService.GetEvents(userId).Entity.ToListAsync();
-            //            foreach (var e in events)
-            //            {
-            //                await Groups.Add(Context.ConnectionId, e.Name);
-            //            }
         }
 
-        [Authorize]
         public override async Task OnDisconnected(bool stopCalled)
         {
+            var userId = Context.User.Identity.GetUserId();
+            await _userEventService.RemoveConnectionId(userId, Context.ConnectionId);
+            var events = await _userEventService.GetEventsAsync(userId);
+            foreach (var e in events)
+            {
+                await Groups.Remove(Context.ConnectionId, e.Name);
+            }
+
             await base.OnDisconnected(true);
-//            var userId = Context.User.Identity.GetUserId();
-//            var events = await _userEventService.GetEvents(userId).Entity.ToListAsync();
-//            foreach (var e in events)
-//            {
-//                await Groups.Remove(Context.ConnectionId, e.Name);
-//            }
         }
     }
 }

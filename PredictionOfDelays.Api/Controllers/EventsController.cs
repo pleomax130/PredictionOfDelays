@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Results;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.SignalR;
+using PredictionOfDelays.Api.Hubs;
 using PredictionOfDelays.Infrastructure;
 using PredictionOfDelays.Infrastructure.DTO;
 using PredictionOfDelays.Infrastructure.Mappers;
@@ -19,9 +21,11 @@ namespace PredictionOfDelays.Api.Controllers
     {
         private readonly IEventService _eventService;
         private readonly IUserEventService _userEventService;
+        private IHubContext<NotificationsHub> _notificationsHubContext;
 
         public EventsController(IEventService eventService, IUserEventService userEventService)
         {
+            _notificationsHubContext = GlobalHost.DependencyResolver.Resolve<IHubContext<NotificationsHub>>();
             _eventService = eventService;
             _userEventService = userEventService;
         }

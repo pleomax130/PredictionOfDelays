@@ -15,6 +15,8 @@ namespace PredictionOfDelays.Infrastructure.Services
         Task AddInviteAsync(string senderId, string invitedId, int eventId);
         Task AcceptInvitationAsync(Guid inviteId, string receiverId);
         Task RejectInvitationAsync(Guid inviteId, string receiverId);
-
+        Task<ICollection<string>> GetConnectionIds(string userId);
+        Task AddConnectionId(string userId, string connectionId);
+        Task RemoveConnectionId(string userId, string connectionId);
     }
 }

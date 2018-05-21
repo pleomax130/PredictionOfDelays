@@ -2,8 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNet.SignalR;
+using Microsoft.AspNet.SignalR.Hubs;
 using Microsoft.Owin;
+using Microsoft.Owin.Cors;
+using Microsoft.Owin.Security.OAuth;
 using Owin;
+using PredictionOfDelays.Api.Hubs;
+using PredictionOfDelays.Api.Providers;
 
 [assembly: OwinStartup(typeof(PredictionOfDelays.Api.Startup))]
 
@@ -16,7 +21,16 @@ namespace PredictionOfDelays.Api
             ConfigureAuth(app);
 
             app.UseCors(Microsoft.Owin.Cors.CorsOptions.AllowAll);
-            app.MapSignalR();
+            app.Map("/signalr", map =>
+            {
+
+                map.UseOAuthBearerAuthentication(new OAuthBearerAuthenticationOptions()
+                {
+                    Provider = new QueryStringOAuthBearerProvider()
+                });
+
+                map.RunSignalR();
+            });
         }
     }
 }

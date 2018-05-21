@@ -119,6 +119,10 @@
     <Compile Include="Migrations\201805081410569_GroupInvites1.Designer.cs">
       <DependentUpon>201805081410569_GroupInvites1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201805201300148_AddConnectionIds.cs" />
+    <Compile Include="Migrations\201805201300148_AddConnectionIds.Designer.cs">
+      <DependentUpon>201805201300148_AddConnectionIds.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -168,6 +172,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201805081410569_GroupInvites1.resx">
       <DependentUpon>201805081410569_GroupInvites1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201805201300148_AddConnectionIds.resx">
+      <DependentUpon>201805201300148_AddConnectionIds.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

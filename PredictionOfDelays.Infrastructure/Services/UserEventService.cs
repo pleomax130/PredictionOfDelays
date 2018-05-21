@@ -120,5 +120,20 @@ namespace PredictionOfDelays.Infrastructure.Services
                 default: throw new ServiceException(ErrorCodes.DatabaseError);
             }
         }
+
+        public async Task<ICollection<string>> GetConnectionIds(string userId)
+        {
+            return await _userEventRepository.GetConnectionIds(userId);
+        }
+
+        public async Task AddConnectionId(string userId, string connectionId)
+        {
+            await _userEventRepository.AddConnectionId(userId, connectionId);
+        }
+
+        public async Task RemoveConnectionId(string userId, string connectionId)
+        {
+            await _userEventRepository.RemoveConnectionId(userId, connectionId);
+        }
     }
 }
