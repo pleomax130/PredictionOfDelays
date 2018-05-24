@@ -14,6 +14,8 @@ namespace PredictionOfDelays.Core.Repositories
         Task<RepositoryActionResult<IQueryable<ApplicationUser>>> GetAttendeesAsync(int eventId);
         RepositoryActionResult<IQueryable<Event>> GetEvents(string userId);
         Task<RepositoryActionResult<EventInvite>> AddInviteAsync(EventInvite invite);
+        Task<RepositoryActionResult<EventInvite>> AddGroupInviteAsync(string senderId, int groupId, int eventId);
+        Task<RepositoryActionResult<EventInvite>> AddInviteEmailAsync(int eventId, string senderId, string email);
         Task<RepositoryActionResult<UserEvent>> AcceptInvitationAsync(Guid inviteId, string receiverId);
         Task<RepositoryActionResult<EventInvite>> RejectInvitationAsync(Guid inviteId, string receiverId);
         Task AddConnectionId(string userId, string connectionId);

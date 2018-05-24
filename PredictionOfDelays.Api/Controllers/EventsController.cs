@@ -178,6 +178,30 @@ namespace PredictionOfDelays.Api.Controllers
         }
 
         [HttpPost]
+        [Route("{eventId}/eventInvites")]
+        public async Task<IHttpActionResult> Invite(int eventId, [FromBody]EmailDto invitedEmailDto)
+        {
+            try
+            {
+                var senderId = User.Identity.GetUserId();
+                await _userEventService.AddInviteEmailAsync(senderId, invitedEmailDto.Email, eventId);
+                return Ok();
+            }
+            catch (ServiceException e)
+            {
+                if (e.Code == ErrorCodes.BadRequest)
+                {
+                    return BadRequest();
+                }
+                if(e.Code == ErrorCodes.EntityNotFound)
+                {
+                    return NotFound();
+                }
+                return InternalServerError();
+            }
+        }
+
+        [HttpPost]
         [Route("{eventId}/invites/{inviteId}")]
         public async Task<IHttpActionResult> Accept(int eventId, Guid inviteId)
         {

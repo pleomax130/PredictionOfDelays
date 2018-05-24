@@ -114,6 +114,69 @@ namespace PredictionOfDelays.Infrastructure.Repositories
             }
         }
 
+        public async Task<RepositoryActionResult<EventInvite>> AddGroupInviteAsync(string senderId, int groupId, int eventId)
+        {
+            var group = await _context.Groups.FirstOrDefaultAsync(g => g.GroupId == groupId);
+            if (@group == null) return new RepositoryActionResult<EventInvite>(null, RepositoryStatus.Error);
+            var users = @group.Users;
+            foreach (var user in users)
+            {
+                var existingInvite = await _context.EventInvites.FirstOrDefaultAsync(
+                    i => i.EventId == eventId && i.InvitedId == user.ApplicationUserId);
+
+                if (existingInvite != null)
+                {
+                    return new RepositoryActionResult<EventInvite>(existingInvite, RepositoryStatus.BadRequest);
+                }
+
+                try
+                {
+                    var invite = new EventInvite {EventInviteId = Guid.NewGuid(), SenderId = senderId, InvitedId = user.ApplicationUserId, EventId = eventId};
+                    var result = _context.EventInvites.Add(invite);
+                    await _context.SaveChangesAsync();
+                    new InviteSender().SendEventInvite(invite);
+                    return new RepositoryActionResult<EventInvite>(result, RepositoryStatus.Created);
+                }
+                catch (Exception e)
+                {
+                    return new RepositoryActionResult<EventInvite>(null, RepositoryStatus.Error);
+                }
+            }
+            return new RepositoryActionResult<EventInvite>(null, RepositoryStatus.Error);
+        }
+
+        public async Task<RepositoryActionResult<EventInvite>> AddInviteEmailAsync(int eventId, string senderId, string email)
+        {
+            var sender = await _context.Users.FirstOrDefaultAsync(u => u.Id == senderId);
+            var invited = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            var @event = await _context.Events.FirstOrDefaultAsync(e => e.EventId == eventId);
+            if (sender == null || invited == null || @event == null)
+            {
+                return new RepositoryActionResult<EventInvite>(null, RepositoryStatus.NotFound);
+            }
+
+            var existingInvite = await _context.EventInvites.FirstOrDefaultAsync(
+                i => i.EventId == eventId && invited.Email == email);
+
+            if (existingInvite != null)
+            {
+                return new RepositoryActionResult<EventInvite>(existingInvite, RepositoryStatus.BadRequest);
+            }
+
+            try
+            {
+                var invite = new EventInvite {EventInviteId = Guid.NewGuid(), EventId = eventId, SenderId = senderId, InvitedId = invited.Id};
+                var result = _context.EventInvites.Add(invite);
+                await _context.SaveChangesAsync();
+                new InviteSender().SendEventInvite(invite);
+                return new RepositoryActionResult<EventInvite>(result, RepositoryStatus.Created);
+            }
+            catch (Exception e)
+            {
+                return new RepositoryActionResult<EventInvite>(null, RepositoryStatus.Error);
+            }
+        }
+
         public Task<RepositoryActionResult<EventInvite>> AddInviteGroupAsync(EventInvite invite)
         {
             throw new NotImplementedException();

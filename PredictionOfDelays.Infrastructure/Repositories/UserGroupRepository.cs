@@ -110,6 +110,37 @@ namespace PredictionOfDelays.Infrastructure.Repositories
             }
         }
 
+        public async Task<RepositoryActionResult<GroupInvite>> AddInviteEmailAsync(int groupId, string senderId, string email)
+        {
+            var sender = await _context.Users.FirstOrDefaultAsync(u => u.Id == senderId);
+            var invited = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            var group = await _context.Groups.FirstOrDefaultAsync(e => e.GroupId == groupId);
+            if (sender == null || invited == null || group == null)
+            {
+                return new RepositoryActionResult<GroupInvite>(null, RepositoryStatus.NotFound);
+            }
+
+            var existingInvite = await _context.GroupInvites.FirstOrDefaultAsync(
+                i => i.GroupId == groupId && i.InvitedId == invited.Id);
+
+            if (existingInvite != null)
+            {
+                return new RepositoryActionResult<GroupInvite>(existingInvite, RepositoryStatus.BadRequest);
+            }
+
+            try
+            {
+                var invite = new GroupInvite {GroupInviteId = Guid.NewGuid(), GroupId = groupId, SenderId = senderId, InvitedId = invited.Id};
+                var result = _context.GroupInvites.Add(invite);
+                await _context.SaveChangesAsync();
+                return new RepositoryActionResult<GroupInvite>(result, RepositoryStatus.Created);
+            }
+            catch (Exception e)
+            {
+                return new RepositoryActionResult<GroupInvite>(null, RepositoryStatus.Error);
+            }
+        }
+
         public async Task<RepositoryActionResult<UserGroup>> AcceptInvitationAsync(Guid inviteId, string receiverId)
         {
             var groupInvite = await _context.GroupInvites.FirstOrDefaultAsync(

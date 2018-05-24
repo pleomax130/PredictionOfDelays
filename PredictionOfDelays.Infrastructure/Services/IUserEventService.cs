@@ -13,6 +13,7 @@ namespace PredictionOfDelays.Infrastructure.Services
         Task<List<ApplicationUserDto>> GetAttendeesAsync(int eventId);
         Task<List<EventDto>> GetEventsAsync(string userId);
         Task AddInviteAsync(string senderId, string invitedId, int eventId);
+        Task AddInviteEmailAsync(string senderId, string email, int eventId);
         Task AcceptInvitationAsync(Guid inviteId, string receiverId);
         Task RejectInvitationAsync(Guid inviteId, string receiverId);
         Task<ICollection<string>> GetConnectionIds(string userId);

@@ -13,6 +13,7 @@ namespace PredictionOfDelays.Core.Repositories
         Task<RepositoryActionResult<IQueryable<ApplicationUser>>> GetMembersAsync(int groupId);
         RepositoryActionResult<IQueryable<Group>> GetGroups(string userId);
         Task<RepositoryActionResult<GroupInvite>> AddInviteAsync(GroupInvite invite);
+        Task<RepositoryActionResult<GroupInvite>> AddInviteEmailAsync(int groupId, string senderId, string email);
         Task<RepositoryActionResult<UserGroup>> AcceptInvitationAsync(Guid inviteId, string receiverId);
         Task<RepositoryActionResult<GroupInvite>> RejectInvitationAsync(Guid inviteId, string receiverId);
     }

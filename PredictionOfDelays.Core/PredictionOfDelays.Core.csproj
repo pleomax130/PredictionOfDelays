@@ -129,8 +129,10 @@
     <Compile Include="Models\ApplicationDbContext.cs" />
     <Compile Include="Models\Event.cs" />
     <Compile Include="Models\EventInvite.cs" />
+    <Compile Include="Models\EventInviteEmail.cs" />
     <Compile Include="Models\Group.cs" />
     <Compile Include="Models\GroupInvite.cs" />
+    <Compile Include="Models\GroupInviteEmail.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\IEntity.cs" />
     <Compile Include="Models\Localization.cs" />

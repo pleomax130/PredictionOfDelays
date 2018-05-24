@@ -93,6 +93,22 @@ namespace PredictionOfDelays.Infrastructure.Services
             }
         }
 
+        public async Task AddInviteEmailAsync(string senderId, string email, int eventId)
+        {
+            var result = await _userEventRepository.AddInviteEmailAsync(eventId, senderId, email);
+
+            switch (result.Status)
+            {
+                case RepositoryStatus.Created:
+                    return;
+                case RepositoryStatus.NotFound:
+                    throw new ServiceException(ErrorCodes.EntityNotFound);
+                case RepositoryStatus.BadRequest:
+                    throw new ServiceException(ErrorCodes.BadRequest);
+                default: throw new ServiceException(ErrorCodes.DatabaseError);
+            }
+        }
+
         public async Task AcceptInvitationAsync(Guid inviteId, string receiverId)
         {
             var result = await _userEventRepository.AcceptInvitationAsync(inviteId, receiverId);

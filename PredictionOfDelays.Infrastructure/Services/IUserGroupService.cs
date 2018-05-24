@@ -12,7 +12,8 @@ namespace PredictionOfDelays.Infrastructure.Services
         Task RemoveAsync(string userId, int groupId);
         Task<List<ApplicationUserDto>> GetMembersAsync(int groupId);
         Task<List<GroupDto>> GetGroupsAsync(string userId);
-        Task AddInviteAsync(string senderId, string invitedId, int groupId);
+        Task AddInviteAsync(string senderId, string email, int groupId);
+        Task AddInviteEmailAsync(string senderId, string invitedId, int groupId);
         Task AcceptInvitationAsync(Guid inviteId, string receiverId);
         Task RejectInvitationAsync(Guid inviteId, string receiverId);
     }

@@ -127,6 +127,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DTO\ApplicationUserDto.cs" />
+    <Compile Include="DTO\EmailDto.cs" />
     <Compile Include="DTO\EventDto.cs" />
     <Compile Include="DTO\GroupDto.cs" />
     <Compile Include="DTO\LocalizationDto.cs" />
