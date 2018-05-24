@@ -76,9 +76,9 @@ namespace PredictionOfDelays.Infrastructure.Repositories
 
         public RepositoryActionResult<IQueryable<Event>> GetEvents(string userId)
         {
-            var events = _context.UserEvents.Include("Event").Where(ug => ug.ApplicationUserId == userId)
+            var events = _context.UserEvents.Include("Event.Localization").Where(ug => ug.ApplicationUserId == userId)
                 .Select(u => u.Event);
-
+            var dupa = _context.UserEvents.Include("Event.Localization").Where(ug => ug.ApplicationUserId == userId).ToList();
             return new RepositoryActionResult<IQueryable<Event>>(events, RepositoryStatus.Ok);
         }
 
@@ -173,6 +173,14 @@ namespace PredictionOfDelays.Infrastructure.Repositories
             }
             catch (Exception e)
             {
+                var ex = new ExceptionWrapper
+                {
+                    ExceptionMessage = e.Message,
+                    ExceptionStackTrace = e.StackTrace,
+                    LogTime = DateTime.Now
+                };
+                _context.Exception.Add(ex);
+                await _context.SaveChangesAsync();
                 return new RepositoryActionResult<EventInvite>(null, RepositoryStatus.Error);
             }
         }

@@ -10,11 +10,15 @@ namespace PredictionOfDelays.Infrastructure.Mappers
             => new MapperConfiguration(cfg =>
                 {
                     cfg.CreateMap<ApplicationUser, ApplicationUserDto>();
+                    cfg.CreateMap<ApplicationUserDto, ApplicationUser>();
                     cfg.CreateMap<Event, EventDto>();
                     cfg.CreateMap<Group, GroupDto>();
                     cfg.CreateMap<GroupDto, Group>();
                     cfg.CreateMap<EventDto, Event>();
                     cfg.CreateMap<Localization, LocalizationDto>();
+                    cfg.CreateMap<EventInvite, EventInviteDto>();
+                    cfg.CreateMap<GroupInvite, GroupInviteDto>();
+                    cfg.CreateMap<Invites, InvitesDto>();
                 })
                 .CreateMapper();
     }

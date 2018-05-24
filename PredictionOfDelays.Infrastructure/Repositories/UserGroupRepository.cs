@@ -137,6 +137,14 @@ namespace PredictionOfDelays.Infrastructure.Repositories
             }
             catch (Exception e)
             {
+                var ex = new ExceptionWrapper
+                {
+                    ExceptionMessage = e.Message,
+                    ExceptionStackTrace = e.StackTrace,
+                    LogTime = DateTime.Now
+                };
+                _context.Exception.Add(ex);
+                await _context.SaveChangesAsync();
                 return new RepositoryActionResult<GroupInvite>(null, RepositoryStatus.Error);
             }
         }

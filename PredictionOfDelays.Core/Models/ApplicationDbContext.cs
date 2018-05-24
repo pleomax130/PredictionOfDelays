@@ -12,6 +12,7 @@ namespace PredictionOfDelays.Core.Models
         public DbSet<GroupInvite> GroupInvites { get; set; }
         public DbSet<EventInvite> EventInvites { get; set; }
         public DbSet<Localization> Localizations { get; set; }
+        public DbSet<ExceptionWrapper> Exception { get; set; }
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {
