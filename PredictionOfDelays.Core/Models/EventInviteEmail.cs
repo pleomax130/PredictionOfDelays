@@ -7,7 +7,7 @@ namespace PredictionOfDelays.Core.Models
     public class EventInviteEmail
     {
         [Key]
-        public Guid EventInviteId { get; set; }
+        public int EventInviteId { get; set; }
 
         public string Email { get; set; }
 

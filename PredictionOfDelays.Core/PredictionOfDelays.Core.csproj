@@ -123,6 +123,10 @@
     <Compile Include="Migrations\201805201300148_AddConnectionIds.Designer.cs">
       <DependentUpon>201805201300148_AddConnectionIds.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201805241827515_AddAttribute.cs" />
+    <Compile Include="Migrations\201805241827515_AddAttribute.Designer.cs">
+      <DependentUpon>201805241827515_AddAttribute.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -135,6 +139,7 @@
     <Compile Include="Models\GroupInviteEmail.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\IEntity.cs" />
+    <Compile Include="Models\Invites.cs" />
     <Compile Include="Models\Localization.cs" />
     <Compile Include="Models\UserEvent.cs" />
     <Compile Include="Models\UserGroup.cs" />
@@ -177,6 +182,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201805201300148_AddConnectionIds.resx">
       <DependentUpon>201805201300148_AddConnectionIds.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201805241827515_AddAttribute.resx">
+      <DependentUpon>201805241827515_AddAttribute.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

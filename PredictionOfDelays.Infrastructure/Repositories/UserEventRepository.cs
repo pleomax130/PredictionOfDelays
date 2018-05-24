@@ -131,7 +131,7 @@ namespace PredictionOfDelays.Infrastructure.Repositories
 
                 try
                 {
-                    var invite = new EventInvite {EventInviteId = Guid.NewGuid(), SenderId = senderId, InvitedId = user.ApplicationUserId, EventId = eventId};
+                    var invite = new EventInvite {SenderId = senderId, InvitedId = user.ApplicationUserId, EventId = eventId};
                     var result = _context.EventInvites.Add(invite);
                     await _context.SaveChangesAsync();
                     new InviteSender().SendEventInvite(invite);
@@ -156,7 +156,7 @@ namespace PredictionOfDelays.Infrastructure.Repositories
             }
 
             var existingInvite = await _context.EventInvites.FirstOrDefaultAsync(
-                i => i.EventId == eventId && invited.Email == email);
+                i => i.EventId == eventId && i.Invited.Email == email);
 
             if (existingInvite != null)
             {
@@ -168,7 +168,7 @@ namespace PredictionOfDelays.Infrastructure.Repositories
                 var invite = new EventInvite {EventInviteId = Guid.NewGuid(), EventId = eventId, SenderId = senderId, InvitedId = invited.Id};
                 var result = _context.EventInvites.Add(invite);
                 await _context.SaveChangesAsync();
-                new InviteSender().SendEventInvite(invite);
+                //new InviteSender().SendEventInvite(invite);
                 return new RepositoryActionResult<EventInvite>(result, RepositoryStatus.Created);
             }
             catch (Exception e)
@@ -177,10 +177,7 @@ namespace PredictionOfDelays.Infrastructure.Repositories
             }
         }
 
-        public Task<RepositoryActionResult<EventInvite>> AddInviteGroupAsync(EventInvite invite)
-        {
-            throw new NotImplementedException();
-        }
+     
 
         public async Task<RepositoryActionResult<UserEvent>> AcceptInvitationAsync(Guid inviteId, string receiverId)
         {
@@ -251,6 +248,15 @@ namespace PredictionOfDelays.Infrastructure.Repositories
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
             return user?.ConnectionIds;
+        }
+
+        public async Task<RepositoryActionResult<Invites>> GetInvites(string userId)
+        {
+            var eventInvites = await _context.EventInvites.Include(e => e.Event).Include(e => e.Sender).Include(e => e.Invited).Where(ev => ev.InvitedId == userId).ToListAsync();
+            var groupInvites = await _context.GroupInvites.Include(g => g.Group).Include(g => g.Sender).Include(g => g.Invited).Where(ev => ev.InvitedId == userId).ToListAsync();
+
+            var invites = new Invites() {EventInvites = eventInvites, GroupInvites = groupInvites};
+            return new RepositoryActionResult<Invites>(invites, RepositoryStatus.Ok);
         }
     }
 }

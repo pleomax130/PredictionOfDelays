@@ -1,4 +1,6 @@
-﻿namespace PredictionOfDelays.Infrastructure.DTO
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace PredictionOfDelays.Infrastructure.DTO
 {
     public class EmailDto
     {

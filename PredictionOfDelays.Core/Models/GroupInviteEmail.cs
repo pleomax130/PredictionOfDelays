@@ -7,7 +7,7 @@ namespace PredictionOfDelays.Core.Models
     public class GroupInviteEmail
     {
         [Key]
-        public Guid GroupInviteId { get; set; }
+        public int GroupInviteId { get; set; }
 
         public string Email { get; set; }
 

@@ -400,6 +400,15 @@ namespace PredictionOfDelays.Api.Controllers
             return Ok(events);
         }
 
+        [HttpGet]
+        [Route("invites", Name = "invites")]
+        public async Task<IHttpActionResult> GetInvites()
+        {
+            var userId = User.Identity.GetUserId();
+            var invites = await _userEventService.GetInvites(userId);
+            return Ok(invites);
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing && _userManager != null)

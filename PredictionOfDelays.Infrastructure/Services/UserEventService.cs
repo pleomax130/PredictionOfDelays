@@ -151,5 +151,11 @@ namespace PredictionOfDelays.Infrastructure.Services
         {
             await _userEventRepository.RemoveConnectionId(userId, connectionId);
         }
+
+        public async Task<InvitesDto> GetInvites(string userId)
+        {
+            var result = await _userEventRepository.GetInvites(userId);
+            return _mapper.Map<Invites, InvitesDto>(result.Entity);
+        }
     }
 }

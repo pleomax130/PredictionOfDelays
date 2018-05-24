@@ -121,7 +121,7 @@ namespace PredictionOfDelays.Infrastructure.Repositories
             }
 
             var existingInvite = await _context.GroupInvites.FirstOrDefaultAsync(
-                i => i.GroupId == groupId && i.InvitedId == invited.Id);
+                i => i.GroupId == groupId && i.Invited.Email == email);
 
             if (existingInvite != null)
             {
@@ -130,7 +130,7 @@ namespace PredictionOfDelays.Infrastructure.Repositories
 
             try
             {
-                var invite = new GroupInvite {GroupInviteId = Guid.NewGuid(), GroupId = groupId, SenderId = senderId, InvitedId = invited.Id};
+                var invite = new GroupInvite {GroupId = groupId, SenderId = senderId, InvitedId = invited.Id};
                 var result = _context.GroupInvites.Add(invite);
                 await _context.SaveChangesAsync();
                 return new RepositoryActionResult<GroupInvite>(result, RepositoryStatus.Created);

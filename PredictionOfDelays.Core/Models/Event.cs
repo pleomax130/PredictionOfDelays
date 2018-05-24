@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace PredictionOfDelays.Core.Models
 {
@@ -23,7 +24,7 @@ namespace PredictionOfDelays.Core.Models
         public ICollection<UserEvent> Users { get; set; }
         [Required]
         public Localization Localization { get; set; }
-
+        [JsonIgnore]
         public ICollection<EventInvite> EventInvites { get; set; }
 
         public Event()

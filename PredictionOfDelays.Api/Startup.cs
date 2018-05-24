@@ -18,9 +18,6 @@ namespace PredictionOfDelays.Api
     {
         public void Configuration(IAppBuilder app)
         {
-            ConfigureAuth(app);
-
-            app.UseCors(Microsoft.Owin.Cors.CorsOptions.AllowAll);
             app.Map("/signalr", map =>
             {
 
@@ -31,6 +28,8 @@ namespace PredictionOfDelays.Api
 
                 map.RunSignalR();
             });
+
+            ConfigureAuth(app);            
         }
     }
 }

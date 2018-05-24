@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +12,7 @@ namespace PredictionOfDelays.Core.Models
     public class EventInvite
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid EventInviteId { get; set; }
 
         public string InvitedId { get; set; }
@@ -20,7 +22,6 @@ namespace PredictionOfDelays.Core.Models
         public ApplicationUser Sender { get; set; }
 
         public int EventId { get; set; }
-        [JsonIgnore]
         public Event Event { get; set; }
     }
 }
