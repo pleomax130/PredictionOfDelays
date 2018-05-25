@@ -77,7 +77,7 @@ namespace PredictionOfDelays.Infrastructure.Repositories
         public RepositoryActionResult<IQueryable<Event>> GetEvents(string userId)
         {
             var events = _context.UserEvents.Include("Event.Localization").Where(ug => ug.ApplicationUserId == userId)
-                .Select(u => u.Event);
+                .Select(u => u.Event).ToList().AsQueryable();
             var dupa = _context.UserEvents.Include("Event.Localization").Where(ug => ug.ApplicationUserId == userId).ToList();
             return new RepositoryActionResult<IQueryable<Event>>(events, RepositoryStatus.Ok);
         }

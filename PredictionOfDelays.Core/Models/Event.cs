@@ -31,7 +31,6 @@ namespace PredictionOfDelays.Core.Models
         {
            Users = new List<UserEvent>();
            EventInvites = new List<EventInvite>();
-        
         }
 
         

@@ -134,6 +134,7 @@
     <Compile Include="DTO\GroupInviteDto.cs" />
     <Compile Include="DTO\InvitesDto.cs" />
     <Compile Include="DTO\LocalizationDto.cs" />
+    <Compile Include="DTO\UserEventDto.cs" />
     <Compile Include="Services\ErrorCodes.cs" />
     <Compile Include="IoC\Modules\RepositoryModule.cs" />
     <Compile Include="IoC\Modules\ServiceModule.cs" />

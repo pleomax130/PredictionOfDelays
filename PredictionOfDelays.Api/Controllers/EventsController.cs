@@ -9,6 +9,7 @@ using System.Web.Http.Results;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.SignalR;
 using PredictionOfDelays.Api.Hubs;
+using PredictionOfDelays.Core.Models;
 using PredictionOfDelays.Infrastructure;
 using PredictionOfDelays.Infrastructure.DTO;
 using PredictionOfDelays.Infrastructure.Mappers;
@@ -43,7 +44,12 @@ namespace PredictionOfDelays.Api.Controllers
             {
                 var @event = await _eventService.GetByIdAsync(eventId);
                 var attendees = await _userEventService.GetAttendeesAsync(eventId);
-                @event.Users = attendees;
+                List<UserEventDto> userEvents = new List<UserEventDto>();
+                foreach (var applicationUserDto in attendees)
+                {
+                    userEvents.Add(new UserEventDto() {ApplicationUser = applicationUserDto});
+                }
+                @event.Users = userEvents;
                 return Ok(@event);
             }
             catch (ServiceException e)

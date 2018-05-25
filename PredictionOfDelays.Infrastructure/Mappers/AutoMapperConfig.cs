@@ -19,6 +19,7 @@ namespace PredictionOfDelays.Infrastructure.Mappers
                     cfg.CreateMap<EventInvite, EventInviteDto>();
                     cfg.CreateMap<GroupInvite, GroupInviteDto>();
                     cfg.CreateMap<Invites, InvitesDto>();
+                    cfg.CreateMap<UserEvent, UserEventDto>();
                 })
                 .CreateMapper();
     }

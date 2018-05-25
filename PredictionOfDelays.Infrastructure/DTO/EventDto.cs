@@ -23,6 +23,6 @@ namespace PredictionOfDelays.Infrastructure.DTO
 
         [MaxLength(250)]
         public string Description { get; set; }
-        public List<ApplicationUserDto> Users { get; set; }
+        public List<UserEventDto> Users { get; set; }
     }
 }

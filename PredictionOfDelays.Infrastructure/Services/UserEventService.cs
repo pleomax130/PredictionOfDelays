@@ -67,7 +67,7 @@ namespace PredictionOfDelays.Infrastructure.Services
         public async Task<List<EventDto>> GetEventsAsync(string userId)
         {
             var result = _userEventRepository.GetEvents(userId);
-            var events = await result.Entity.ToListAsync();
+            var events = result.Entity.ToList();
 
             return _mapper.Map<ICollection<Event>, List<EventDto>>(events);
         }
