@@ -152,6 +152,22 @@ namespace PredictionOfDelays.Infrastructure.Services
             await _userEventRepository.RemoveConnectionId(userId, connectionId);
         }
 
+        public async Task AddPlannedArrival(string userId, int eventId, DateTime plannedArrival)
+        {
+            await _userEventRepository.UpdatePlannedArrival(userId, eventId, plannedArrival);
+        }
+
+        public async Task<DateTime> GetPlannedArrival(string userId, int eventId)
+        {
+            var result = await _userEventRepository.GetPlannedArrival(userId, eventId);
+
+            if (result.Status == RepositoryStatus.Ok)
+            {
+                return result.Entity;
+            }
+            throw new ServiceException(ErrorCodes.EntityNotFound);
+        }
+
         public async Task<InvitesDto> GetInvites(string userId)
         {
             var result = await _userEventRepository.GetInvites(userId);

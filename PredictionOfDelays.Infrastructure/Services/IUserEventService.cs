@@ -20,5 +20,7 @@ namespace PredictionOfDelays.Infrastructure.Services
         Task<ICollection<string>> GetConnectionIds(string userId);
         Task AddConnectionId(string userId, string connectionId);
         Task RemoveConnectionId(string userId, string connectionId);
+        Task AddPlannedArrival(string userId, int eventId, DateTime plannedArrival);
+        Task<DateTime> GetPlannedArrival(string userId, int eventId);
     }
 }

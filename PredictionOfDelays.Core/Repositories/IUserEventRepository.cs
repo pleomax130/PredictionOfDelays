@@ -22,5 +22,7 @@ namespace PredictionOfDelays.Core.Repositories
         Task AddConnectionId(string userId, string connectionId);
         Task RemoveConnectionId(string userId, string connectionId);
         Task<ICollection<string>> GetConnectionIds(string userId);
+        Task UpdatePlannedArrival(string userId, int eventId, DateTime plannedArrival);
+        Task<RepositoryActionResult<DateTime>> GetPlannedArrival(string userId, int eventId);
     }
 }

@@ -246,5 +246,36 @@ namespace PredictionOfDelays.Api.Controllers
                 return InternalServerError();
             }
         }
+
+        [HttpPost]
+        [Route("{eventId}/delays")]
+        public async Task<IHttpActionResult> UpdateArrivalTime(int eventId, [FromBody]DateTime arrivalTime)
+        {
+            try
+            {
+                var userId = User.Identity.GetUserId();
+                await _userEventService.AddPlannedArrival(userId, eventId, arrivalTime);
+                return Ok();
+            }
+            catch (ServiceException e)
+            { 
+                return InternalServerError();
+            }
+        }
+
+        [HttpGet]
+        [Route("{eventId}/delays/{userId}")]
+        public async Task<IHttpActionResult> GetArrivalTime(int eventId, string userId)
+        {
+            try
+            {
+                var arrival = await _userEventService.GetPlannedArrival(userId, eventId);
+                return Ok(arrival);
+            }
+            catch (ServiceException e)
+            {
+                return InternalServerError();
+            }
+        }
     }
 }
