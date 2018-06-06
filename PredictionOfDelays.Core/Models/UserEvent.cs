@@ -16,8 +16,9 @@ namespace PredictionOfDelays.Core.Models
         public ApplicationUser ApplicationUser { get; set; }
         [Key, Column(Order = 1)]
         public int EventId { get; set; }
+
         public Event Event { get; set; }
-        public DateTime PlannedArrival { get; set; }
+        public int MinutesOfDelay { get; set; }
 
     }
 }

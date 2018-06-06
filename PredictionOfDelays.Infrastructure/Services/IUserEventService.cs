@@ -10,8 +10,8 @@ namespace PredictionOfDelays.Infrastructure.Services
     {
         Task AddAsync(string userId, int eventId);
         Task RemoveAsync(string userId, int eventId);
-        Task<List<ApplicationUserDto>> GetAttendeesAsync(int eventId);
-        Task<List<EventDto>> GetEventsAsync(string userId);
+        Task<List<UserEventDto>> GetAttendeesAsync(int eventId);
+        Task<List<UserEventDto>> GetEventsAsync(string userId);
         Task AddInviteAsync(string senderId, string invitedId, int eventId);
         Task AddInviteEmailAsync(string senderId, string email, int eventId);
         Task AcceptInvitationAsync(int inviteId, string receiverId);
@@ -20,7 +20,7 @@ namespace PredictionOfDelays.Infrastructure.Services
         Task<ICollection<string>> GetConnectionIds(string userId);
         Task AddConnectionId(string userId, string connectionId);
         Task RemoveConnectionId(string userId, string connectionId);
-        Task AddPlannedArrival(string userId, int eventId, DateTime plannedArrival);
-        Task<DateTime> GetPlannedArrival(string userId, int eventId);
+        Task AddDelayAsync(string userId, int eventId, int minutesOfDelay);
+        Task<int> GetDelayAsync(string userId, int eventId);
     }
 }

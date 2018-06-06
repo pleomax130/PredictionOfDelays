@@ -11,8 +11,8 @@ namespace PredictionOfDelays.Core.Repositories
     {
         Task<RepositoryActionResult<UserEvent>> AddAsync(UserEvent userEvent);
         Task<RepositoryActionResult<UserEvent>> RemoveAsync(UserEvent userEvent);
-        Task<RepositoryActionResult<IQueryable<ApplicationUser>>> GetAttendeesAsync(int eventId);
-        RepositoryActionResult<IQueryable<Event>> GetEvents(string userId);
+        Task<RepositoryActionResult<IQueryable<UserEvent>>> GetAttendeesAsync(int eventId);
+        RepositoryActionResult<IQueryable<UserEvent>> GetEvents(string userId);
         Task<RepositoryActionResult<EventInvite>> AddInviteAsync(EventInvite invite);
         Task<RepositoryActionResult<EventInvite>> AddGroupInviteAsync(string senderId, int groupId, int eventId);
         Task<RepositoryActionResult<EventInvite>> AddInviteEmailAsync(int eventId, string senderId, string email);
@@ -22,7 +22,7 @@ namespace PredictionOfDelays.Core.Repositories
         Task AddConnectionId(string userId, string connectionId);
         Task RemoveConnectionId(string userId, string connectionId);
         Task<ICollection<string>> GetConnectionIds(string userId);
-        Task UpdatePlannedArrival(string userId, int eventId, DateTime plannedArrival);
-        Task<RepositoryActionResult<DateTime>> GetPlannedArrival(string userId, int eventId);
+        Task AddDelayAsync(string userId, int eventId, int minutesOfDelay);
+        Task<RepositoryActionResult<int>> GetDelayAsync(string userId, int eventId);
     }
 }

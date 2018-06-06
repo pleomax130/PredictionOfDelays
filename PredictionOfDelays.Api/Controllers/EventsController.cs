@@ -44,12 +44,7 @@ namespace PredictionOfDelays.Api.Controllers
             {
                 var @event = await _eventService.GetByIdAsync(eventId);
                 var attendees = await _userEventService.GetAttendeesAsync(eventId);
-                List<UserEventDto> userEvents = new List<UserEventDto>();
-                foreach (var applicationUserDto in attendees)
-                {
-                    userEvents.Add(new UserEventDto() {ApplicationUser = applicationUserDto});
-                }
-                @event.Users = userEvents;
+                @event.Users = attendees;
                 return Ok(@event);
             }
             catch (ServiceException e)
@@ -249,12 +244,11 @@ namespace PredictionOfDelays.Api.Controllers
 
         [HttpPost]
         [Route("{eventId}/delays")]
-        public async Task<IHttpActionResult> UpdateArrivalTime(int eventId, [FromBody]DateTime arrivalTime)
+        public async Task<IHttpActionResult> AddDelay(int eventId, [FromBody]DelayDto delay)
         {
             try
             {
-                var userId = User.Identity.GetUserId();
-                await _userEventService.AddPlannedArrival(userId, eventId, arrivalTime);
+                await _userEventService.AddDelayAsync(delay.UserId, eventId, delay.AmountOfMinutes);
                 return Ok();
             }
             catch (ServiceException e)
@@ -265,11 +259,11 @@ namespace PredictionOfDelays.Api.Controllers
 
         [HttpGet]
         [Route("{eventId}/delays/{userId}")]
-        public async Task<IHttpActionResult> GetArrivalTime(int eventId, string userId)
+        public async Task<IHttpActionResult> GetDelay(int eventId, string userId)
         {
             try
             {
-                var arrival = await _userEventService.GetPlannedArrival(userId, eventId);
+                var arrival = await _userEventService.GetDelayAsync(userId, eventId);
                 return Ok(arrival);
             }
             catch (ServiceException e)

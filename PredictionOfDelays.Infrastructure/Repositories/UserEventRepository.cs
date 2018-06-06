@@ -58,28 +58,26 @@ namespace PredictionOfDelays.Infrastructure.Repositories
             }
         }
 
-        public async Task<RepositoryActionResult<IQueryable<ApplicationUser>>> GetAttendeesAsync(int eventId)
+        public async Task<RepositoryActionResult<IQueryable<UserEvent>>> GetAttendeesAsync(int eventId)
         {
             var @event = await _context.Events.FirstOrDefaultAsync(e => e.EventId == eventId);
 
             if (@event == null)
             {
-                return new RepositoryActionResult<IQueryable<ApplicationUser>>(null, RepositoryStatus.NotFound);
+                return new RepositoryActionResult<IQueryable<UserEvent>>(null, RepositoryStatus.NotFound);
             }
 
-            var attendees = _context.UserEvents.Include("ApplicationUser").Where(ue => ue.EventId == eventId)
-                .Select(ue => ue.ApplicationUser);
+            var attendees = _context.UserEvents.Include("ApplicationUser").Where(ue => ue.EventId == eventId);
 
-            return new RepositoryActionResult<IQueryable<ApplicationUser>>(attendees, RepositoryStatus.Ok);
+            return new RepositoryActionResult<IQueryable<UserEvent>>(attendees, RepositoryStatus.Ok);
 
         }
 
-        public RepositoryActionResult<IQueryable<Event>> GetEvents(string userId)
+        public RepositoryActionResult<IQueryable<UserEvent>> GetEvents(string userId)
         {
-            var events = _context.UserEvents.Include("Event.Localization").Where(ug => ug.ApplicationUserId == userId)
-                .Select(u => u.Event).ToList().AsQueryable();
+            var events = _context.UserEvents.Include("Event.Localization").Where(ug => ug.ApplicationUserId == userId).ToList().AsQueryable();
 //            var x = _context.UserEvents.Include("Event.Localization").Where(ug => ug.ApplicationUserId == userId).ToList();
-            return new RepositoryActionResult<IQueryable<Event>>(events, RepositoryStatus.Ok);
+            return new RepositoryActionResult<IQueryable<UserEvent>>(events, RepositoryStatus.Ok);
         }
 
         public async Task<RepositoryActionResult<EventInvite>> AddInviteAsync(EventInvite invite)
@@ -200,8 +198,7 @@ namespace PredictionOfDelays.Infrastructure.Repositories
                 var entity = _context.UserEvents.Add(new UserEvent()
                 {
                     ApplicationUserId = eventInvite.InvitedId,
-                    EventId = eventInvite.EventId,
-                    PlannedArrival = eventInvite.Event.EventDate
+                    EventId = eventInvite.EventId
                 });
                 await _context.SaveChangesAsync();
                 //Clean invites
@@ -258,28 +255,28 @@ namespace PredictionOfDelays.Infrastructure.Repositories
             return user?.ConnectionIds;
         }
 
-        public async Task UpdatePlannedArrival(string userId, int eventId, DateTime plannedArrival)
+        public async Task AddDelayAsync(string userId, int eventId, int minutesOfDelay)
         {
             var userEvent =
                 await _context.UserEvents.FirstOrDefaultAsync(ue => ue.ApplicationUserId == userId && ue.EventId == eventId);
 
             if (userEvent != null)
             {
-                userEvent.PlannedArrival = plannedArrival;
+                userEvent.MinutesOfDelay = minutesOfDelay;
                 await _context.SaveChangesAsync();
             }
         }
 
-        public async Task<RepositoryActionResult<DateTime>> GetPlannedArrival(string userId, int eventId)
+        public async Task<RepositoryActionResult<int>> GetDelayAsync(string userId, int eventId)
         {
             var userEvent =
                 await _context.UserEvents.FirstOrDefaultAsync(ue => ue.ApplicationUserId == userId && ue.EventId == eventId);
 
             if (userEvent != null)
             {
-                return new RepositoryActionResult<DateTime>(userEvent.PlannedArrival, RepositoryStatus.Ok);
+                return new RepositoryActionResult<int>(userEvent.MinutesOfDelay, RepositoryStatus.Ok);
             }
-            return new RepositoryActionResult<DateTime>(DateTime.MaxValue, RepositoryStatus.NotFound);
+            return new RepositoryActionResult<int>(0, RepositoryStatus.NotFound);
         }
 
         public async Task<RepositoryActionResult<Invites>> GetInvites(string userId)

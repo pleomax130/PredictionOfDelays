@@ -48,14 +48,14 @@ namespace PredictionOfDelays.Infrastructure.Services
             }
         }
 
-        public async Task<List<ApplicationUserDto>> GetAttendeesAsync(int eventId)
+        public async Task<List<UserEventDto>> GetAttendeesAsync(int eventId)
         {
             var result = await _userEventRepository.GetAttendeesAsync(eventId);
 
             if (result.Status == RepositoryStatus.Ok)
             {
                 var attendees = await result.Entity.ToListAsync();
-                return _mapper.Map<List<ApplicationUser>, List<ApplicationUserDto>>(attendees);
+                return _mapper.Map<List<UserEvent>, List<UserEventDto>>(attendees);
             }
             if (result.Status == RepositoryStatus.NotFound)
             {
@@ -64,12 +64,12 @@ namespace PredictionOfDelays.Infrastructure.Services
             throw new ServiceException(ErrorCodes.DatabaseError);
         }
 
-        public async Task<List<EventDto>> GetEventsAsync(string userId)
+        public async Task<List<UserEventDto>> GetEventsAsync(string userId)
         {
             var result = _userEventRepository.GetEvents(userId);
             var events = result.Entity.ToList();
 
-            return _mapper.Map<ICollection<Event>, List<EventDto>>(events);
+            return _mapper.Map<ICollection<UserEvent>, List<UserEventDto>>(events);
         }
 
         public async Task AddInviteAsync(string senderId, string invitedId, int eventId)
@@ -152,14 +152,14 @@ namespace PredictionOfDelays.Infrastructure.Services
             await _userEventRepository.RemoveConnectionId(userId, connectionId);
         }
 
-        public async Task AddPlannedArrival(string userId, int eventId, DateTime plannedArrival)
+        public async Task AddDelayAsync(string userId, int eventId, int minutesOfDelay)
         {
-            await _userEventRepository.UpdatePlannedArrival(userId, eventId, plannedArrival);
+            await _userEventRepository.AddDelayAsync(userId, eventId, minutesOfDelay);
         }
 
-        public async Task<DateTime> GetPlannedArrival(string userId, int eventId)
+        public async Task<int> GetDelayAsync(string userId, int eventId)
         {
-            var result = await _userEventRepository.GetPlannedArrival(userId, eventId);
+            var result = await _userEventRepository.GetDelayAsync(userId, eventId);
 
             if (result.Status == RepositoryStatus.Ok)
             {
