@@ -15,7 +15,7 @@ namespace PredictionOfDelays.Infrastructure.DTO
         public string ApplicationUserId { get; set; }
         public ApplicationUserDto ApplicationUser { get; set; }
         public int EventId { get; set; }
-        [JsonIgnore]
+
         public EventDto Event { get; set; }
 
         public int MinutesOfDelay { get; set; }
