@@ -248,7 +248,8 @@ namespace PredictionOfDelays.Api.Controllers
         {
             try
             {
-                await _userEventService.AddDelayAsync(delay.UserId, eventId, delay.AmountOfMinutes);
+                var userId = User.Identity.GetUserId();
+                await _userEventService.AddDelayAsync(userId, eventId, delay.AmountOfMinutes);
                 return Ok();
             }
             catch (ServiceException e)

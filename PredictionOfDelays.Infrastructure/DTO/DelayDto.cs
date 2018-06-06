@@ -9,6 +9,5 @@ namespace PredictionOfDelays.Infrastructure.DTO
     public class DelayDto
     {
         public int AmountOfMinutes { get; set; }
-        public string UserId { get; set; }
     }
 }
