@@ -32,7 +32,7 @@ namespace PredictionOfDelays.Api.Hubs
             var events = await _userEventService.GetEventsAsync(userId);
             foreach (var @event in events)
             {
-                Clients.OthersInGroup(@event.Name).hello(@event.Name);
+                Clients.OthersInGroup(@event.Event.Name).hello(@event.Event.Name);
             }
         }
 
@@ -48,7 +48,7 @@ namespace PredictionOfDelays.Api.Hubs
             var events = await _userEventService.GetEventsAsync(userId);
             foreach (var e in events)
             {
-                await Groups.Add(Context.ConnectionId, e.Name);
+                await Groups.Add(Context.ConnectionId, e.Event.Name);
             }
 
             await base.OnConnected();
@@ -61,7 +61,7 @@ namespace PredictionOfDelays.Api.Hubs
             var events = await _userEventService.GetEventsAsync(userId);
             foreach (var e in events)
             {
-                await Groups.Add(Context.ConnectionId, e.Name);
+                await Groups.Add(Context.ConnectionId, e.Event.Name);
             }
 
             await base.OnReconnected();
@@ -74,7 +74,7 @@ namespace PredictionOfDelays.Api.Hubs
             var events = await _userEventService.GetEventsAsync(userId);
             foreach (var e in events)
             {
-                await Groups.Remove(Context.ConnectionId, e.Name);
+                await Groups.Remove(Context.ConnectionId, e.Event.Name);
             }
 
             await base.OnDisconnected(true);
