@@ -99,7 +99,6 @@ namespace PredictionOfDelays.Infrastructure.Repositories
 
             try
             {
-                invite.GroupInviteId = Guid.NewGuid();
                 var result = _context.GroupInvites.Add(invite);
                 await _context.SaveChangesAsync();
                 return new RepositoryActionResult<GroupInvite>(result, RepositoryStatus.Created);
@@ -149,7 +148,7 @@ namespace PredictionOfDelays.Infrastructure.Repositories
             }
         }
 
-        public async Task<RepositoryActionResult<UserGroup>> AcceptInvitationAsync(Guid inviteId, string receiverId)
+        public async Task<RepositoryActionResult<UserGroup>> AcceptInvitationAsync(int inviteId, string receiverId)
         {
             var groupInvite = await _context.GroupInvites.FirstOrDefaultAsync(
                 i => i.GroupInviteId == inviteId && i.InvitedId == receiverId);
@@ -175,7 +174,7 @@ namespace PredictionOfDelays.Infrastructure.Repositories
             }
         }
 
-        public async Task<RepositoryActionResult<GroupInvite>> RejectInvitationAsync(Guid inviteId, string receiverId)
+        public async Task<RepositoryActionResult<GroupInvite>> RejectInvitationAsync(int inviteId, string receiverId)
         {
             var groupInvite = await _context.GroupInvites.FirstOrDefaultAsync(
                 i => i.GroupInviteId == inviteId && i.InvitedId == receiverId);

@@ -199,7 +199,7 @@ namespace PredictionOfDelays.Api.Controllers
 
         [HttpPost]
         [Route("{groupId}/invites/{inviteId}")]
-        public async Task<IHttpActionResult> Accept(int groupId, Guid inviteId)
+        public async Task<IHttpActionResult> Accept(int groupId, int inviteId)
         {
             try
             {
@@ -219,7 +219,7 @@ namespace PredictionOfDelays.Api.Controllers
 
         [HttpDelete]
         [Route("{groupId}/invites/{inviteId}")]
-        public async Task<IHttpActionResult> Reject(int groupId, Guid inviteId)
+        public async Task<IHttpActionResult> Reject(int groupId, int inviteId)
         {
             try
             {

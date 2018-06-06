@@ -102,10 +102,9 @@ namespace PredictionOfDelays.Infrastructure.Repositories
 
             try
             {
-                invite.EventInviteId = Guid.NewGuid();
                 var result = _context.EventInvites.Add(invite);
                 await _context.SaveChangesAsync();
-                new InviteSender().SendEventInvite(invite);
+//                new InviteSender().SendEventInvite(invite);
                 return new RepositoryActionResult<EventInvite>(result, RepositoryStatus.Created);
             }
             catch (Exception e)
@@ -187,9 +186,9 @@ namespace PredictionOfDelays.Infrastructure.Repositories
 
      
 
-        public async Task<RepositoryActionResult<UserEvent>> AcceptInvitationAsync(Guid inviteId, string receiverId)
+        public async Task<RepositoryActionResult<UserEvent>> AcceptInvitationAsync(int inviteId, string receiverId)
         {
-            var eventInvite = await _context.EventInvites.FirstOrDefaultAsync(
+            var eventInvite = await _context.EventInvites.Include(e => e.Event).FirstOrDefaultAsync(
                 i => i.EventInviteId == inviteId && i.InvitedId == receiverId);
 
             if (eventInvite == null)
@@ -201,9 +200,10 @@ namespace PredictionOfDelays.Infrastructure.Repositories
                 var entity = _context.UserEvents.Add(new UserEvent()
                 {
                     ApplicationUserId = eventInvite.InvitedId,
-                    EventId = eventInvite.EventId
+                    EventId = eventInvite.EventId,
+                    PlannedArrival = eventInvite.Event.EventDate
                 });
-
+                await _context.SaveChangesAsync();
                 //Clean invites
                 _context.EventInvites.Remove(eventInvite);
 
@@ -216,7 +216,7 @@ namespace PredictionOfDelays.Infrastructure.Repositories
             }
         }
 
-        public async Task<RepositoryActionResult<EventInvite>> RejectInvitationAsync(Guid inviteId, string receiverId)
+        public async Task<RepositoryActionResult<EventInvite>> RejectInvitationAsync(int inviteId, string receiverId)
         {
             var eventInvite = await _context.EventInvites.FirstOrDefaultAsync(
                 i => i.EventInviteId == inviteId && i.InvitedId == receiverId);

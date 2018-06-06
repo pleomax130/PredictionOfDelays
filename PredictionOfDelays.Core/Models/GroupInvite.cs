@@ -7,9 +7,7 @@ namespace PredictionOfDelays.Core.Models
 {
     public class GroupInvite
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid GroupInviteId { get; set; }
+        public int GroupInviteId { get; set; }
 
         public string InvitedId { get; set; }
         public ApplicationUser Invited { get; set; }

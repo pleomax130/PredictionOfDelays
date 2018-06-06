@@ -109,7 +109,7 @@ namespace PredictionOfDelays.Infrastructure.Services
             }
         }
 
-        public async Task AcceptInvitationAsync(Guid inviteId, string receiverId)
+        public async Task AcceptInvitationAsync(int inviteId, string receiverId)
         {
             var result = await _userEventRepository.AcceptInvitationAsync(inviteId, receiverId);
 
@@ -123,7 +123,7 @@ namespace PredictionOfDelays.Infrastructure.Services
             }
         }
 
-        public async Task RejectInvitationAsync(Guid inviteId, string receiverId)
+        public async Task RejectInvitationAsync(int inviteId, string receiverId)
         {
             var result = await _userEventRepository.RejectInvitationAsync(inviteId, receiverId);
 
