@@ -22,7 +22,7 @@ namespace PredictionOfDelays.Core.Repositories
         Task AddConnectionId(string userId, string connectionId);
         Task RemoveConnectionId(string userId, string connectionId);
         Task<ICollection<string>> GetConnectionIds(string userId);
-        Task AddDelayAsync(string userId, int eventId, int minutesOfDelay);
+        Task<RepositoryActionResult<Tuple<bool, UserEvent>>> AddDelayAsync(string userId, int eventId, int minutesOfDelay);
         Task<RepositoryActionResult<int>> GetDelayAsync(string userId, int eventId);
     }
 }

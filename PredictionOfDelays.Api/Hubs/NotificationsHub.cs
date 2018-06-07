@@ -10,7 +10,9 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.SignalR;
 using NLog;
 using NLog.Fluent;
+using PredictionOfDelays.Core.Models;
 using PredictionOfDelays.Core.Repositories;
+using PredictionOfDelays.Infrastructure.DTO;
 using PredictionOfDelays.Infrastructure.Repositories;
 using PredictionOfDelays.Infrastructure.Services;
 using WebGrease.Css.Extensions;
@@ -26,19 +28,9 @@ namespace PredictionOfDelays.Api.Hubs
             _userEventService = userEventService;
         }
 
-        public async Task Hello()
+        public async Task NotifyOthersInGroup(UserEventDto userEvent)
         {
-            var userId = Context.User.Identity.GetUserId();
-            var events = await _userEventService.GetEventsAsync(userId);
-            foreach (var @event in events)
-            {
-                Clients.OthersInGroup(@event.Event.Name).hello(@event.Event.Name);
-            }
-        }
-
-        public void SendNotification(string groupName, string message)
-        {
-            
+            await Clients.OthersInGroup(userEvent.Event.Name).hello(userEvent.Event.Name);
         }
 
         public override async Task OnConnected()

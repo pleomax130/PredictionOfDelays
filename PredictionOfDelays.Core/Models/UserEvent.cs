@@ -19,6 +19,7 @@ namespace PredictionOfDelays.Core.Models
 
         public Event Event { get; set; }
         public int MinutesOfDelay { get; set; }
+        public bool IsAnnounced { get; set; }
 
     }
 }

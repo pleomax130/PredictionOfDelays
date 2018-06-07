@@ -17,7 +17,7 @@ namespace PredictionOfDelays.Infrastructure.DTO
         public int EventId { get; set; }
 
         public EventDto Event { get; set; }
-
         public int MinutesOfDelay { get; set; }
+        public bool IsAnnounced { get; set; }
     }
 }

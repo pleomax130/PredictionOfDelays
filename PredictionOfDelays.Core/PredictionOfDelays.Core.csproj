@@ -147,6 +147,10 @@
     <Compile Include="Migrations\201806061855388_AddDelayColumn.Designer.cs">
       <DependentUpon>201806061855388_AddDelayColumn.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201806071032333_AddAnnouncedFlag.cs" />
+    <Compile Include="Migrations\201806071032333_AddAnnouncedFlag.Designer.cs">
+      <DependentUpon>201806071032333_AddAnnouncedFlag.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -218,6 +222,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201806061855388_AddDelayColumn.resx">
       <DependentUpon>201806061855388_AddDelayColumn.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201806071032333_AddAnnouncedFlag.resx">
+      <DependentUpon>201806071032333_AddAnnouncedFlag.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

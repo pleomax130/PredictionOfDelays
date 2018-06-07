@@ -255,7 +255,7 @@ namespace PredictionOfDelays.Infrastructure.Repositories
             return user?.ConnectionIds;
         }
 
-        public async Task AddDelayAsync(string userId, int eventId, int minutesOfDelay)
+        public async Task<RepositoryActionResult<Tuple<bool, UserEvent>>> AddDelayAsync(string userId, int eventId, int minutesOfDelay)
         {
             var userEvent =
                 await _context.UserEvents.FirstOrDefaultAsync(ue => ue.ApplicationUserId == userId && ue.EventId == eventId);
@@ -263,8 +263,16 @@ namespace PredictionOfDelays.Infrastructure.Repositories
             if (userEvent != null)
             {
                 userEvent.MinutesOfDelay = minutesOfDelay;
+                if (!userEvent.IsAnnounced)
+                {
+                    userEvent.IsAnnounced = true;
+                    await _context.SaveChangesAsync();
+                    return new RepositoryActionResult<Tuple<bool, UserEvent>>(new Tuple<bool, UserEvent>(true, userEvent), RepositoryStatus.Ok);
+                }
                 await _context.SaveChangesAsync();
+                return new RepositoryActionResult<Tuple<bool, UserEvent>>(new Tuple<bool, UserEvent>(false, userEvent), RepositoryStatus.Ok);
             }
+            return new RepositoryActionResult<Tuple<bool, UserEvent>>(null, RepositoryStatus.NotFound);
         }
 
         public async Task<RepositoryActionResult<int>> GetDelayAsync(string userId, int eventId)

@@ -249,7 +249,12 @@ namespace PredictionOfDelays.Api.Controllers
             try
             {
                 var userId = User.Identity.GetUserId();
-                await _userEventService.AddDelayAsync(userId, eventId, delay.AmountOfMinutes);
+                var result = await _userEventService.AddDelayAsync(userId, eventId, delay.AmountOfMinutes);
+
+                if (result.Item1)
+                {
+                    await _notificationsHubContext.Clients.All.NotifyOthersInGroup(result.Item2);
+                }
                 return Ok();
             }
             catch (ServiceException e)

@@ -20,7 +20,7 @@ namespace PredictionOfDelays.Infrastructure.Services
         Task<ICollection<string>> GetConnectionIds(string userId);
         Task AddConnectionId(string userId, string connectionId);
         Task RemoveConnectionId(string userId, string connectionId);
-        Task AddDelayAsync(string userId, int eventId, int minutesOfDelay);
+        Task<Tuple<bool, UserEventDto>> AddDelayAsync(string userId, int eventId, int minutesOfDelay);
         Task<int> GetDelayAsync(string userId, int eventId);
     }
 }

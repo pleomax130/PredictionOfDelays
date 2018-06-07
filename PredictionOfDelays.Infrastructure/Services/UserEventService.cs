@@ -152,9 +152,16 @@ namespace PredictionOfDelays.Infrastructure.Services
             await _userEventRepository.RemoveConnectionId(userId, connectionId);
         }
 
-        public async Task AddDelayAsync(string userId, int eventId, int minutesOfDelay)
+        public async Task<Tuple<bool, UserEventDto>> AddDelayAsync(string userId, int eventId, int minutesOfDelay)
         {
-            await _userEventRepository.AddDelayAsync(userId, eventId, minutesOfDelay);
+            var result = await _userEventRepository.AddDelayAsync(userId, eventId, minutesOfDelay);
+
+            if (result.Status == RepositoryStatus.Ok)
+            {
+                var userEventDto = _mapper.Map<UserEvent, UserEventDto>(result.Entity.Item2);
+                return new Tuple<bool, UserEventDto>(result.Entity.Item1, userEventDto);
+            }
+            throw new ServiceException(ErrorCodes.EntityNotFound);
         }
 
         public async Task<int> GetDelayAsync(string userId, int eventId)
