@@ -18,7 +18,6 @@ namespace PredictionOfDelays.Infrastructure.DTO
 
         [Required]
         [Display(Name = "Date of event")]
-        [FutureDate(ErrorMessage = "Enter future date")]
         public DateTime EventDate { get; set; }
 
         [MaxLength(250)]

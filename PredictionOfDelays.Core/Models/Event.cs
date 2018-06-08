@@ -17,7 +17,6 @@ namespace PredictionOfDelays.Core.Models
         public string Name { get; set; }
         [Required]
         [Display(Name = "Date of event")]
-        [FutureDate(ErrorMessage = "Enter future date")]
         public DateTime EventDate { get; set; }
         [MaxLength(250)]
         public string Description { get; set; }
